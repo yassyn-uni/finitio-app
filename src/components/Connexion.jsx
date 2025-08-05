@@ -1,74 +1,91 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
+import { trackLogin, trackEvent } from '../utils/analytics';
 
 export default function Connexion() {
-  const [formData, setFormData] = useState({
-    email: '',
-    motDePasse: '',
-  });
-
+  const [email, setEmail] = useState('');
+  const [motDePasse, setMotDePasse] = useState('');
+  const [loading, setLoading] = useState(false);
   const [erreur, setErreur] = useState('');
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     setErreur('');
 
-    const { email, motDePasse } = formData;
+    // 📊 Tracker la tentative de connexion
+    trackEvent('login_attempt', {
+      email_domain: email.split('@')[1] || 'unknown',
+      timestamp: new Date().toISOString()
+    });
 
     try {
-      // 🔐 Étape 1 : Auth Supabase
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password: motDePasse,
       });
-     console.log("✅ Résultat signIn:", { user: authData?.user, session: authData?.session });
-console.log("❌ Erreur auth:", authError);
 
-
-      if (authError || !authData?.user) {
-        setErreur("❌ Email ou mot de passe incorrect.");
-        return;
+      if (error) {
+        // 🚨 Tracker l'échec de connexion
+        trackEvent('login_failed', {
+          error_type: error.message,
+          email_domain: email.split('@')[1] || 'unknown',
+          timestamp: new Date().toISOString()
+        });
+        throw error;
       }
 
-      // 🔍 Étape 2 : Rôle depuis la table "users"
-      const { data: userData, error: roleError } = await supabase
-        .from('users')
-        .select('role')
-        .eq('id', authData.user.id)
-        .single();
+      if (data.user) {
+        // 🎯 Récupérer le profil utilisateur pour le tracking
+        const { data: userProfile } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', data.user.id)
+          .single();
 
-      if (roleError || !userData) {
-        setErreur("⚠️ Connexion réussie, mais rôle non trouvé.");
-        return;
+        // ✅ Tracker la connexion réussie
+        await trackLogin(data.user.id, {
+          email: data.user.email,
+          role: userProfile?.role || 'unknown',
+          nom: userProfile?.nom || 'Unknown User',
+          login_method: 'email_password',
+          user_agent: navigator.userAgent,
+          timestamp: new Date().toISOString()
+        });
+
+        // 📱 Tracker l'événement de connexion réussie
+        trackEvent('login_success', {
+          user_role: userProfile?.role || 'unknown',
+          login_method: 'email_password',
+          email_domain: email.split('@')[1] || 'unknown',
+          timestamp: new Date().toISOString()
+        });
+
+        // Stocker le début de session pour calculer la durée
+        localStorage.setItem('session_start', Date.now().toString());
+
+        // Redirection selon le rôle
+        const dashboardPath = userProfile?.role ? `/dashboard-${userProfile.role}` : '/dashboard';
+        navigate(dashboardPath);
       }
-
-      const role = userData.role;
-
-      // 🚀 Étape 3 : Redirection selon le rôle
-      if (role === 'client') {
-        navigate('/dashboard-client');
-      } else if (role === 'prestataire') {
-        navigate('/dashboard-prestataire');
-      } else if (role === 'architecte') {
-        navigate('/dashboard-architecte');
-      } else {
-        setErreur("❌ Rôle inconnu. Contactez l’administrateur.");
-      }
-
-    } catch (err) {
-      setErreur("Une erreur est survenue. Veuillez réessayer.");
-      console.error(err);
+    } catch (error) {
+      console.error('Erreur de connexion:', error);
+      setErreur(error.message);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  // 🔗 Tracker les clics sur les liens
+  const handleLinkClick = (linkName, linkPath) => {
+    trackEvent('auth_navigation', {
+      link_name: linkName,
+      link_path: linkPath,
+      page: 'login',
+      timestamp: new Date().toISOString()
+    });
   };
 
   return (
@@ -88,10 +105,11 @@ console.log("❌ Erreur auth:", authError);
             <input
               type="email"
               name="email"
-              value={formData.email}
-              onChange={handleChange}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1e3a8a]"
               required
+              onFocus={() => trackEvent('form_field_focus', { field: 'email', page: 'login' })}
             />
           </div>
 
@@ -100,15 +118,17 @@ console.log("❌ Erreur auth:", authError);
             <input
               type="password"
               name="motDePasse"
-              value={formData.motDePasse}
-              onChange={handleChange}
+              value={motDePasse}
+              onChange={(e) => setMotDePasse(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1e3a8a]"
               required
+              onFocus={() => trackEvent('form_field_focus', { field: 'password', page: 'login' })}
             />
             <div className="mt-2 text-right">
               <Link 
                 to="/reset-password" 
                 className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
+                onClick={() => handleLinkClick('Mot de passe oublié', '/reset-password')}
               >
                 Mot de passe oublié ?
               </Link>
@@ -117,9 +137,11 @@ console.log("❌ Erreur auth:", authError);
 
           <button
             type="submit"
+            disabled={loading}
             className="w-full bg-[#10b981] text-white py-2 rounded-lg hover:bg-[#059669] transition duration-300"
+            onClick={() => trackEvent('login_button_click', { timestamp: new Date().toISOString() })}
           >
-            Se connecter
+            {loading ? 'Connexion...' : 'Se connecter'}
           </button>
         </form>
       </div>

@@ -1,38 +1,72 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
+import { FinitioLogo } from '../assets/FinitioAssets';
 import NotificationCenter from './NotificationCenter';
-import { FinitioLogo, FinitioIcon } from '../assets/FinitioAssets';
+import { trackEvent, trackCTAClick } from '../utils/analytics';
 
 export default function Navbar() {
   const [user, setUser] = useState(null);
-  const [userData, setUserData] = useState(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Effet de scroll pour la navbar
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  // 🎯 Tracker les clics sur les liens de navigation
+  const handleNavClick = (linkName, linkPath) => {
+    trackEvent('navbar_navigation', {
+      link_name: linkName,
+      link_path: linkPath,
+      user_role: userProfile?.role || 'anonymous'
+    });
+  };
+
+  // 📊 Tracker les interactions avec le profil
+  const handleProfileToggle = () => {
+    setIsProfileOpen(!isProfileOpen);
+    trackEvent('navbar_profile_toggle', {
+      action: !isProfileOpen ? 'open' : 'close',
+      user_role: userProfile?.role
+    });
+  };
+
+  // 📱 Tracker les interactions mobile
+  const handleMobileMenuToggle = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+    trackEvent('navbar_mobile_menu', {
+      action: !isMobileMenuOpen ? 'open' : 'close',
+      device_type: 'mobile'
+    });
+  };
+
+  // 🔐 Tracker la déconnexion
+  const handleLogout = async () => {
+    trackEvent('user_logout', {
+      user_role: userProfile?.role,
+      session_duration: Date.now() - (localStorage.getItem('session_start') || Date.now())
+    });
+    
+    await supabase.auth.signOut();
+    setUser(null);
+    setUserProfile(null);
+    navigate('/');
+  };
 
   useEffect(() => {
-    // Récupérer l'utilisateur actuel
+    // Vérifier l'utilisateur connecté
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
       
       if (user) {
-        const { data } = await supabase
+        // Récupérer le profil utilisateur
+        const { data: profile } = await supabase
           .from('users')
           .select('*')
           .eq('id', user.id)
           .single();
-        setUserData(data);
+        setUserProfile(profile);
       }
     };
 
@@ -40,273 +74,396 @@ export default function Navbar() {
 
     // Écouter les changements d'authentification
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user ?? null);
+      setUser(session?.user || null);
       if (!session?.user) {
-        setUserData(null);
+        setUserProfile(null);
       }
     });
 
-    return () => subscription.unsubscribe();
+    // Gérer le scroll pour l'effet glassmorphism
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      subscription.unsubscribe();
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate('/');
-  };
-
-  const getRoleColor = (role) => {
+  // Fonction pour obtenir les couleurs selon le rôle
+  const getRoleColors = (role) => {
     switch (role) {
-      case 'client': return 'from-blue-500 to-purple-500';
-      case 'prestataire': return 'from-orange-500 to-red-500';
-      case 'architecte': return 'from-emerald-500 to-teal-500';
-      default: return 'from-gray-500 to-gray-600';
+      case 'client':
+        return {
+          gradient: 'from-blue-500 to-purple-600',
+          bg: 'bg-gradient-to-r from-blue-500 to-purple-600',
+          text: 'text-blue-600',
+          border: 'border-blue-500'
+        };
+      case 'prestataire':
+        return {
+          gradient: 'from-orange-500 to-red-600',
+          bg: 'bg-gradient-to-r from-orange-500 to-red-600',
+          text: 'text-orange-600',
+          border: 'border-orange-500'
+        };
+      case 'architecte':
+        return {
+          gradient: 'from-emerald-500 to-teal-600',
+          bg: 'bg-gradient-to-r from-emerald-500 to-teal-600',
+          text: 'text-emerald-600',
+          border: 'border-emerald-500'
+        };
+      default:
+        return {
+          gradient: 'from-gray-500 to-gray-600',
+          bg: 'bg-gradient-to-r from-gray-500 to-gray-600',
+          text: 'text-gray-600',
+          border: 'border-gray-500'
+        };
     }
   };
 
-  const getRoleIcon = (role) => {
-    switch (role) {
-      case 'client': return 'client';
-      case 'prestataire': return 'contractor';
-      case 'architecte': return 'architect';
-      default: return 'client';
-    }
-  };
-
-  const getRoleBadge = (role) => {
-    const colors = {
-      client: 'bg-gradient-to-r from-blue-500 to-purple-500',
-      prestataire: 'bg-gradient-to-r from-orange-500 to-red-500',
-      architecte: 'bg-gradient-to-r from-emerald-500 to-teal-500'
-    };
-    
-    return (
-      <span className={`px-2 py-1 rounded-full text-xs font-semibold text-white ${colors[role] || 'bg-gray-500'}`}>
-        {role?.charAt(0).toUpperCase() + role?.slice(1)}
-      </span>
-    );
-  };
+  const roleColors = userProfile ? getRoleColors(userProfile.role) : getRoleColors('default');
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-      scrolled 
-        ? 'bg-white/90 backdrop-blur-xl shadow-xl border-b border-white/30' 
-        : 'bg-white/70 backdrop-blur-md'
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      isScrolled 
+        ? 'bg-white/90 backdrop-blur-lg shadow-lg border-b border-white/20' 
+        : 'bg-transparent'
     }`}>
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo premium avec animation */}
-          <Link to="/" className="group flex items-center space-x-3 hover-lift">
-            <div className="relative">
-              <FinitioLogo 
-                variant="icon" 
-                size="sm" 
-                className="transform group-hover:scale-110 transition-all duration-300 hover-glow" 
-              />
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-purple-500 rounded-xl opacity-0 group-hover:opacity-20 transition-opacity duration-300 animate-pulse-soft"></div>
-            </div>
-            <div className="hidden sm:block">
+        <div className="flex items-center justify-between h-20">
+          {/* Logo */}
+          <Link 
+            to="/" 
+            className="flex items-center space-x-3 group"
+            onClick={() => handleNavClick('Logo', '/')}
+          >
+            <div className="transform group-hover:scale-110 transition-transform duration-300">
               <FinitioLogo 
                 variant="main" 
                 size="md" 
-                className="transform group-hover:scale-105 transition-all duration-300" 
+                className={`${isScrolled ? 'text-gray-800' : 'text-white'} group-hover:animate-pulse-soft`}
               />
             </div>
+            <span className={`text-2xl font-bold ${isScrolled ? 'text-gray-800' : 'text-white'} group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-600 group-hover:bg-clip-text transition-all duration-300`}>
+              Finitio
+            </span>
           </Link>
 
           {/* Navigation Desktop */}
-          <div className="hidden md:flex items-center space-x-1">
-            {user ? (
+          <div className="hidden md:flex items-center space-x-8">
+            {!user ? (
               <>
-                {/* Liens de navigation avec effets premium */}
                 <Link 
-                  to="/projets" 
-                  className="px-6 py-3 rounded-xl text-gray-700 hover:text-blue-600 hover:bg-blue-50/80 transition-all duration-300 font-medium hover-lift backdrop-blur-sm"
+                  to="/" 
+                  className={`font-medium hover:text-blue-600 transition-colors duration-300 ${
+                    isScrolled ? 'text-gray-700' : 'text-white/90'
+                  }`}
+                  onClick={() => handleNavClick('Accueil', '/')}
                 >
-                  <span className="flex items-center gap-2">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H3m2 0h4M9 7h6m-6 4h6m-6 4h6" />
-                    </svg>
-                    Projets
-                  </span>
+                  Accueil
                 </Link>
                 <Link 
-                  to="/messages" 
-                  className="px-6 py-3 rounded-xl text-gray-700 hover:text-blue-600 hover:bg-blue-50/80 transition-all duration-300 font-medium hover-lift backdrop-blur-sm"
+                  to="/connexion" 
+                  className={`font-medium hover:text-blue-600 transition-colors duration-300 ${
+                    isScrolled ? 'text-gray-700' : 'text-white/90'
+                  }`}
+                  onClick={() => {
+                    handleNavClick('Connexion', '/connexion');
+                    trackCTAClick('Se connecter', 'navbar');
+                  }}
                 >
-                  <span className="flex items-center gap-2">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                    </svg>
-                    Messages
-                  </span>
+                  Se connecter
                 </Link>
-                
-                {/* Centre de notifications premium */}
-                <div className="mx-2">
-                  <NotificationCenter />
-                </div>
+                <Link 
+                  to="/inscription" 
+                  className="btn-modern bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+                  onClick={() => {
+                    handleNavClick('Inscription', '/inscription');
+                    trackCTAClick('S\'inscrire', 'navbar');
+                  }}
+                >
+                  S'inscrire
+                </Link>
+              </>
+            ) : (
+              <div className="flex items-center space-x-6">
+                {/* Notifications */}
+                <NotificationCenter />
 
-                {/* Profil utilisateur premium avec dropdown */}
-                <div className="relative group">
-                  <button className="flex items-center space-x-3 px-4 py-2 rounded-xl hover:bg-gray-50/80 transition-all duration-300 backdrop-blur-sm hover-lift">
-                    {/* Avatar avec icône métier */}
-                    <div className="relative">
-                      <FinitioIcon 
-                        type={getRoleIcon(userData?.role)} 
-                        size="sm" 
-                        className="transform group-hover:scale-110 transition-all duration-300" 
-                      />
-                      <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white animate-pulse-soft"></div>
+                {/* Profil utilisateur */}
+                <div className="relative">
+                  <button
+                    onClick={handleProfileToggle}
+                    className="flex items-center space-x-3 p-2 rounded-full hover:bg-white/10 transition-colors duration-300 group"
+                  >
+                    {/* Avatar avec gradient selon le rôle */}
+                    <div className={`w-10 h-10 rounded-full ${roleColors.bg} flex items-center justify-center text-white font-bold shadow-lg group-hover:shadow-xl transition-shadow duration-300`}>
+                      {userProfile?.nom?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()}
                     </div>
                     
-                    <div className="text-left hidden lg:block">
-                      <div className="text-sm font-semibold text-gray-900">
-                        {userData?.nom || 'Utilisateur'}
+                    {/* Informations utilisateur */}
+                    <div className="hidden lg:block text-left">
+                      <div className={`text-sm font-medium ${isScrolled ? 'text-gray-800' : 'text-white'}`}>
+                        {userProfile?.nom || 'Utilisateur'}
                       </div>
-                      <div className="flex items-center gap-2">
-                        {getRoleBadge(userData?.role)}
+                      <div className={`text-xs ${roleColors.text} font-semibold`}>
+                        {userProfile?.role?.charAt(0).toUpperCase() + userProfile?.role?.slice(1) || 'Utilisateur'}
                       </div>
                     </div>
-                    
-                    <svg className="w-4 h-4 text-gray-500 group-hover:text-gray-700 transition-colors duration-300 transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                    {/* Icône dropdown */}
+                    <svg 
+                      className={`w-4 h-4 transition-transform duration-300 ${isProfileOpen ? 'rotate-180' : ''} ${
+                        isScrolled ? 'text-gray-600' : 'text-white/70'
+                      }`} 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </button>
 
-                  {/* Dropdown menu premium avec glassmorphism */}
-                  <div className="absolute right-0 mt-2 w-80 bg-white/95 backdrop-blur-xl rounded-3xl shadow-premium border border-white/30 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 transform translate-y-2 group-hover:translate-y-0">
-                    <div className="p-6">
+                  {/* Menu dropdown du profil */}
+                  {isProfileOpen && (
+                    <div className="absolute right-0 mt-2 w-80 bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 py-2 animate-fade-in-up">
                       {/* En-tête du profil */}
-                      <div className="flex items-center space-x-4 mb-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl">
-                        <FinitioIcon 
-                          type={getRoleIcon(userData?.role)} 
-                          size="lg" 
-                          className="shadow-lg" 
-                        />
-                        <div className="flex-1">
-                          <div className="font-bold text-gray-900 text-lg">{userData?.nom}</div>
-                          <div className="text-sm text-gray-600 mb-2">{userData?.email}</div>
-                          {getRoleBadge(userData?.role)}
+                      <div className="px-6 py-4 border-b border-gray-200/50">
+                        <div className="flex items-center space-x-4">
+                          <div className={`w-16 h-16 rounded-full ${roleColors.bg} flex items-center justify-center text-white text-xl font-bold shadow-lg`}>
+                            {userProfile?.nom?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()}
+                          </div>
+                          <div>
+                            <div className="text-lg font-semibold text-gray-800">
+                              {userProfile?.nom || 'Utilisateur'}
+                            </div>
+                            <div className="text-sm text-gray-600">{user.email}</div>
+                            <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${roleColors.bg} text-white mt-2`}>
+                              {userProfile?.role?.charAt(0).toUpperCase() + userProfile?.role?.slice(1) || 'Utilisateur'}
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      
-                      {/* Menu de navigation */}
-                      <div className="space-y-2">
-                        <Link 
-                          to="/profil" 
-                          className="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 hover:text-blue-600 hover:bg-blue-50/80 transition-all duration-300 hover-lift"
+
+                      {/* Liens du menu */}
+                      <div className="py-2">
+                        <Link
+                          to={`/dashboard-${userProfile?.role || 'client'}`}
+                          className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100/50 transition-colors duration-200"
+                          onClick={() => {
+                            handleNavClick('Dashboard', `/dashboard-${userProfile?.role}`);
+                            setIsProfileOpen(false);
+                          }}
                         >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          <svg className="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
                           </svg>
-                          <span className="font-medium">Mon profil</span>
+                          Tableau de bord
                         </Link>
-                        
-                        <Link 
-                          to="/parametres" 
-                          className="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 hover:text-blue-600 hover:bg-blue-50/80 transition-all duration-300 hover-lift"
+
+                        <Link
+                          to="/projets"
+                          className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100/50 transition-colors duration-200"
+                          onClick={() => {
+                            handleNavClick('Projets', '/projets');
+                            setIsProfileOpen(false);
+                          }}
                         >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <svg className="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H3m2 0h3M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                           </svg>
-                          <span className="font-medium">Paramètres</span>
+                          Mes projets
                         </Link>
-                        
-                        <div className="border-t border-gray-200 my-3"></div>
-                        
-                        <button 
+
+                        <Link
+                          to="/messages"
+                          className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100/50 transition-colors duration-200"
+                          onClick={() => {
+                            handleNavClick('Messages', '/messages');
+                            setIsProfileOpen(false);
+                          }}
+                        >
+                          <svg className="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                          </svg>
+                          Messages
+                        </Link>
+
+                        {/* Lien Analytics pour les administrateurs */}
+                        {userProfile?.role === 'architecte' && (
+                          <Link
+                            to="/analytics"
+                            className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100/50 transition-colors duration-200"
+                            onClick={() => {
+                              handleNavClick('Analytics', '/analytics');
+                              setIsProfileOpen(false);
+                            }}
+                          >
+                            <svg className="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                            Analytics
+                          </Link>
+                        )}
+
+                        <hr className="my-2 border-gray-200/50" />
+
+                        <button
                           onClick={handleLogout}
-                          className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-red-600 hover:text-red-700 hover:bg-red-50/80 transition-all duration-300 hover-lift"
+                          className="flex items-center w-full px-6 py-3 text-red-600 hover:bg-red-50/50 transition-colors duration-200"
                         >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                           </svg>
-                          <span className="font-medium">Déconnexion</span>
+                          Se déconnecter
                         </button>
                       </div>
                     </div>
-                  </div>
+                  )}
                 </div>
-              </>
-            ) : (
-              <div className="flex items-center space-x-4">
-                <Link 
-                  to="/connexion" 
-                  className="px-6 py-2 text-gray-700 hover:text-blue-600 font-medium transition-all duration-300 hover-lift"
-                >
-                  Connexion
-                </Link>
-                <Link 
-                  to="/inscription" 
-                  className="btn-premium"
-                >
-                  <span className="flex items-center gap-2">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                    </svg>
-                    Inscription
-                  </span>
-                </Link>
               </div>
             )}
           </div>
 
-          {/* Menu mobile premium */}
+          {/* Bouton menu mobile */}
           <div className="md:hidden">
             <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-3 rounded-xl text-gray-700 hover:text-blue-600 hover:bg-blue-50/80 transition-all duration-300 hover-lift backdrop-blur-sm"
+              onClick={handleMobileMenuToggle}
+              className={`p-2 rounded-lg transition-colors duration-300 ${
+                isScrolled ? 'text-gray-700 hover:bg-gray-100' : 'text-white hover:bg-white/10'
+              }`}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+                {isMobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
               </svg>
             </button>
           </div>
         </div>
 
-        {/* Menu mobile dropdown premium */}
-        {isMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-white/30 shadow-premium animate-fade-in-up">
-            <div className="px-4 py-6 space-y-3">
-              {user ? (
+        {/* Menu mobile */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden bg-white/95 backdrop-blur-lg rounded-2xl mt-4 mb-4 shadow-2xl border border-white/20 animate-fade-in-up">
+            <div className="py-4">
+              {!user ? (
                 <>
-                  {/* Profil mobile */}
-                  <div className="flex items-center space-x-4 p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-purple-50 mb-4">
-                    <FinitioIcon 
-                      type={getRoleIcon(userData?.role)} 
-                      size="md" 
-                    />
-                    <div className="flex-1">
-                      <div className="font-semibold text-gray-900">{userData?.nom}</div>
-                      {getRoleBadge(userData?.role)}
-                    </div>
-                  </div>
-                  
-                  <Link to="/projets" className="block px-4 py-3 rounded-xl text-gray-700 hover:bg-blue-50/80 transition-all duration-300 font-medium">
-                    Projets
-                  </Link>
-                  <Link to="/messages" className="block px-4 py-3 rounded-xl text-gray-700 hover:bg-blue-50/80 transition-all duration-300 font-medium">
-                    Messages
-                  </Link>
-                  <Link to="/profil" className="block px-4 py-3 rounded-xl text-gray-700 hover:bg-blue-50/80 transition-all duration-300 font-medium">
-                    Mon profil
-                  </Link>
-                  <button 
-                    onClick={handleLogout}
-                    className="w-full text-left px-4 py-3 rounded-xl text-red-600 hover:bg-red-50/80 transition-all duration-300 font-medium"
+                  <Link
+                    to="/"
+                    className="block px-6 py-3 text-gray-700 hover:bg-gray-100/50 transition-colors duration-200"
+                    onClick={() => {
+                      handleNavClick('Accueil Mobile', '/');
+                      setIsMobileMenuOpen(false);
+                    }}
                   >
-                    Déconnexion
-                  </button>
+                    Accueil
+                  </Link>
+                  <Link
+                    to="/connexion"
+                    className="block px-6 py-3 text-gray-700 hover:bg-gray-100/50 transition-colors duration-200"
+                    onClick={() => {
+                      handleNavClick('Connexion Mobile', '/connexion');
+                      trackCTAClick('Se connecter', 'navbar_mobile');
+                      setIsMobileMenuOpen(false);
+                    }}
+                  >
+                    Se connecter
+                  </Link>
+                  <Link
+                    to="/inscription"
+                    className="block mx-6 my-3 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full text-center font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+                    onClick={() => {
+                      handleNavClick('Inscription Mobile', '/inscription');
+                      trackCTAClick('S\'inscrire', 'navbar_mobile');
+                      setIsMobileMenuOpen(false);
+                    }}
+                  >
+                    S'inscrire
+                  </Link>
                 </>
               ) : (
                 <>
-                  <Link to="/connexion" className="block px-4 py-3 rounded-xl text-gray-700 hover:bg-blue-50/80 transition-all duration-300 font-medium">
-                    Connexion
+                  {/* Profil utilisateur mobile */}
+                  <div className="px-6 py-4 border-b border-gray-200/50">
+                    <div className="flex items-center space-x-4">
+                      <div className={`w-12 h-12 rounded-full ${roleColors.bg} flex items-center justify-center text-white font-bold`}>
+                        {userProfile?.nom?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <div className="font-semibold text-gray-800">
+                          {userProfile?.nom || 'Utilisateur'}
+                        </div>
+                        <div className="text-sm text-gray-600">{user.email}</div>
+                        <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${roleColors.bg} text-white mt-1`}>
+                          {userProfile?.role?.charAt(0).toUpperCase() + userProfile?.role?.slice(1) || 'Utilisateur'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Link
+                    to={`/dashboard-${userProfile?.role || 'client'}`}
+                    className="block px-6 py-3 text-gray-700 hover:bg-gray-100/50 transition-colors duration-200"
+                    onClick={() => {
+                      handleNavClick('Dashboard Mobile', `/dashboard-${userProfile?.role}`);
+                      setIsMobileMenuOpen(false);
+                    }}
+                  >
+                    Tableau de bord
                   </Link>
-                  <Link to="/inscription" className="block px-4 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white text-center transition-all duration-300 font-medium hover-lift">
-                    Inscription
+                  <Link
+                    to="/projets"
+                    className="block px-6 py-3 text-gray-700 hover:bg-gray-100/50 transition-colors duration-200"
+                    onClick={() => {
+                      handleNavClick('Projets Mobile', '/projets');
+                      setIsMobileMenuOpen(false);
+                    }}
+                  >
+                    Mes projets
                   </Link>
+                  <Link
+                    to="/messages"
+                    className="block px-6 py-3 text-gray-700 hover:bg-gray-100/50 transition-colors duration-200"
+                    onClick={() => {
+                      handleNavClick('Messages Mobile', '/messages');
+                      setIsMobileMenuOpen(false);
+                    }}
+                  >
+                    Messages
+                  </Link>
+
+                  {/* Analytics pour les architectes */}
+                  {userProfile?.role === 'architecte' && (
+                    <Link
+                      to="/analytics"
+                      className="block px-6 py-3 text-gray-700 hover:bg-gray-100/50 transition-colors duration-200"
+                      onClick={() => {
+                        handleNavClick('Analytics Mobile', '/analytics');
+                        setIsMobileMenuOpen(false);
+                      }}
+                    >
+                      Analytics
+                    </Link>
+                  )}
+
+                  <hr className="my-2 border-gray-200/50" />
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="block w-full text-left px-6 py-3 text-red-600 hover:bg-red-50/50 transition-colors duration-200"
+                  >
+                    Se déconnecter
+                  </button>
                 </>
               )}
             </div>
