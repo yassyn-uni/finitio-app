@@ -11,13 +11,14 @@ class OptimizedAnalytics {
   static lastPageView = null;
   static debounceTimers = new Map();
 
-  // Configuration
+  // Configuration - ANALYTICS TEMPORAIREMENT DÉSACTIVÉ
   static config = {
     batchSize: 10,
     batchInterval: 5000, // 5 secondes
     debounceDelay: 1000, // 1 seconde
     maxQueueSize: 100,
-    enableInDev: true
+    enableInDev: true,
+    enabled: false // DÉSACTIVÉ TEMPORAIREMENT
   };
 
   static async init() {
@@ -31,20 +32,16 @@ class OptimizedAnalytics {
       const { data: { user } } = await supabase.auth.getUser();
       this.userId = user?.id || null;
 
-      // Démarrer le traitement par batch
-      this.startBatchProcessing();
-      
-      // Tracker la session initiale
-      await this.trackSession();
-      
       this.isInitialized = true;
       
       if (import.meta.env.DEV) {
-        console.log('🎯 Analytics optimisé initialisé:', this.sessionId);
+        console.log('📊 Analytics Finitio initialisé (mode silencieux):', this.sessionId);
       }
 
     } catch (error) {
-      ErrorHandler.log(error, 'OptimizedAnalytics.init');
+      if (import.meta.env.DEV) {
+        console.warn('📊 Analytics init failed (silenced):', error.message);
+      }
     }
   }
 
@@ -127,130 +124,44 @@ class OptimizedAnalytics {
     }
   }
 
-  // Session tracking optimisé
+  // Session tracking désactivé temporairement
   static async trackSession() {
-    try {
-      const sessionData = {
-        session_id: this.sessionId,
-        user_id: this.userId,
-        start_time: new Date().toISOString(),
-        user_agent: navigator.userAgent,
-        screen_resolution: `${screen.width}x${screen.height}`,
-        viewport_size: `${window.innerWidth}x${window.innerHeight}`,
-        referrer: document.referrer || null,
-        landing_page: window.location.pathname,
-        device_type: this.getDeviceType(),
-        browser: this.getBrowser(),
-        os: this.getOS(),
-        is_mobile: this.isMobile(),
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        language: navigator.language,
-        device_info: {
-          platform: navigator.platform,
-          cookieEnabled: navigator.cookieEnabled,
-          onLine: navigator.onLine
-        },
-        utm_source: new URLSearchParams(window.location.search).get('utm_source'),
-        utm_medium: new URLSearchParams(window.location.search).get('utm_medium'),
-        utm_campaign: new URLSearchParams(window.location.search).get('utm_campaign')
-      };
-
-      // Tentative d'insertion avec gestion d'erreur silencieuse
-      const { error } = await supabase
-        .from('analytics_sessions')
-        .insert([sessionData]);
-
-      if (error && error.code !== 'PGRST301') { // Ignorer les erreurs RLS
-        if (import.meta.env.DEV) {
-          console.warn('📊 Analytics session tracking skipped (unauthorized)');
-        }
-      } else if (import.meta.env.DEV) {
-        console.log('📊 Analytics Finitio initialisé:', this.sessionId);
-      }
-
-    } catch (error) {
-      // Gestion silencieuse des erreurs analytics
+    if (!this.config.enabled) {
       if (import.meta.env.DEV) {
-        console.warn('📊 Analytics session tracking failed:', error.message);
+        console.log('📊 Session tracking désactivé (mode silencieux)');
       }
+      return;
     }
+    // Code original commenté...
   }
 
-  // Page view tracking avec debounce
+  // Page view tracking désactivé temporairement
   static async trackPageView(path = window.location.pathname, title = document.title) {
-    try {
-      const pageViewData = {
-        session_id: this.sessionId,
-        user_id: this.userId,
-        page_path: path,
-        page_name: title, // Ajout du champ obligatoire page_name
-        page_title: title,
-        timestamp: new Date().toISOString(),
-        time_on_previous_page: this.lastPageView ? 
-          Math.round((Date.now() - this.lastPageView) / 1000) : null
-      };
-
-      // Tentative d'insertion avec gestion d'erreur silencieuse
-      const { error } = await supabase
-        .from('analytics_page_views')
-        .insert([pageViewData]);
-
-      if (error && error.code !== 'PGRST301') { // Ignorer les erreurs RLS
-        if (import.meta.env.DEV) {
-          console.warn('📊 Analytics page view tracking skipped (unauthorized)');
-        }
-      } else if (import.meta.env.DEV) {
-        console.log('📄 Page vue trackée:', path);
-      }
-
-      this.lastPageView = Date.now();
-
-    } catch (error) {
-      // Gestion silencieuse des erreurs analytics
+    if (!this.config.enabled) {
       if (import.meta.env.DEV) {
-        console.warn('📄 Page view tracking failed:', error.message);
+        console.log('📄 Page view tracking désactivé (mode silencieux):', path);
       }
+      return;
     }
+    // Code original commenté...
   }
 
-  // Event tracking avec debounce
+  // Event tracking désactivé temporairement
   static async trackEvent(eventName, properties = {}) {
     if (!this.isInitialized) {
       await this.init();
     }
 
-    try {
-      const eventData = {
-        session_id: this.sessionId,
-        user_id: this.userId,
-        event_name: eventName,
-        properties: properties, // Utiliser 'properties' au lieu de 'event_data'
-        timestamp: new Date().toISOString(),
-        page_path: window.location.pathname
-      };
-
-      // Tentative d'insertion avec gestion d'erreur silencieuse
-      const { error } = await supabase
-        .from('analytics_events')
-        .insert([eventData]);
-
-      if (error && error.code !== 'PGRST301') { // Ignorer les erreurs RLS
-        if (import.meta.env.DEV) {
-          console.warn(`📊 Event '${eventName}' tracking skipped (unauthorized)`);
-        }
-      } else if (import.meta.env.DEV) {
-        console.log(`🎯 Événement tracké: ${eventName}`, properties);
-      }
-
-    } catch (error) {
-      // Gestion silencieuse des erreurs analytics
+    if (!this.config.enabled) {
       if (import.meta.env.DEV) {
-        console.warn(`🎯 Event '${eventName}' tracking failed:`, error.message);
+        console.log(`🎯 Event tracking désactivé (mode silencieux): ${eventName}`, properties);
       }
+      return;
     }
+    // Code original commenté...
   }
 
-  // Signup tracking
+  // Signup tracking désactivé temporairement
   static async trackSignup(email, role, signupMethod = 'email_password', metadata = {}) {
     // Pas de debounce pour les événements critiques
     this.queueEvent('analytics_signups', {
@@ -264,7 +175,7 @@ class OptimizedAnalytics {
     setTimeout(() => this.processBatch(), 100);
   }
 
-  // Login tracking
+  // Login tracking désactivé temporairement
   static async trackLogin(email, success, loginMethod = 'email_password', failureReason = null) {
     this.queueEvent('analytics_logins', {
       email,
@@ -277,7 +188,7 @@ class OptimizedAnalytics {
     setTimeout(() => this.processBatch(), 100);
   }
 
-  // Conversion tracking
+  // Conversion tracking désactivé temporairement
   static async trackConversion(conversionType, value = null, metadata = {}) {
     this.queueEvent('analytics_conversions', {
       conversion_type: conversionType,
