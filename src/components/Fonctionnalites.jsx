@@ -1,206 +1,314 @@
-import React from 'react';
-import { FinitioIcon, FinitioIllustration } from '../assets/FinitioAssets';
+import React, { useState, useEffect } from 'react';
+import OptimizedAnalytics from '../utils/optimizedAnalytics';
 
 export default function Fonctionnalites() {
-  const fonctionnalites = [
+  const [activeFeature, setActiveFeature] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+    OptimizedAnalytics.trackEvent('fonctionnalites_section_view');
+  }, []);
+
+  const features = [
     {
-      icon: 'project',
+      id: 'suivi-temps-reel',
+      icon: '',
       title: 'Suivi en temps réel',
-      description: 'Suivez l\'avancement de vos chantiers avec des mises à jour instantanées et des notifications intelligentes',
-      color: 'from-blue-500 to-cyan-500',
-      bgColor: 'from-blue-50 to-cyan-50'
+      description: 'Suivez l\'avancement de vos projets avec des mises à jour instantanées et des notifications intelligentes',
+      color: 'primary',
+      gradient: 'from-primary-500 to-primary-600',
+      bgGradient: 'from-primary-50 to-primary-100',
+      details: [
+        'Dashboard en temps réel',
+        'Notifications push intelligentes',
+        'Historique complet des actions',
+        'Rapports automatisés'
+      ],
+      image: ''
     },
     {
-      icon: 'communication',
+      id: 'messagerie-integree',
+      icon: '',
       title: 'Messagerie intégrée',
       description: 'Communiquez directement avec vos équipes et clients via notre système de messagerie sécurisé',
-      color: 'from-green-500 to-emerald-500',
-      bgColor: 'from-green-50 to-emerald-50'
+      color: 'secondary',
+      gradient: 'from-secondary-500 to-secondary-600',
+      bgGradient: 'from-secondary-50 to-secondary-100',
+      details: [
+        'Chat temps réel par projet',
+        'Partage de fichiers sécurisé',
+        'Notifications contextuelles',
+        'Historique des conversations'
+      ],
+      image: ''
     },
     {
-      icon: 'planning',
+      id: 'planification-avancee',
+      icon: '',
       title: 'Planification avancée',
       description: 'Organisez vos projets avec des outils de planification Kanban et des calendriers interactifs',
-      color: 'from-purple-500 to-indigo-500',
-      bgColor: 'from-purple-50 to-indigo-50'
+      color: 'success',
+      gradient: 'from-success-500 to-success-600',
+      bgGradient: 'from-success-50 to-success-100',
+      details: [
+        'Kanban interactif',
+        'Calendrier de projet',
+        'Gestion des dépendances',
+        'Timeline automatique'
+      ],
+      image: ''
     },
     {
-      icon: 'finance',
+      id: 'gestion-financiere',
+      icon: '',
       title: 'Gestion financière',
       description: 'Centralisez vos devis, factures et paiements avec un suivi budgétaire automatisé',
-      color: 'from-orange-500 to-red-500',
-      bgColor: 'from-orange-50 to-red-50'
+      color: 'warning',
+      gradient: 'from-warning-500 to-warning-600',
+      bgGradient: 'from-warning-50 to-warning-100',
+      details: [
+        'Devis automatisés',
+        'Suivi budgétaire',
+        'Facturation intégrée',
+        'Analytics financiers'
+      ],
+      image: ''
     },
     {
-      icon: 'mobile',
+      id: 'acces-multi-plateforme',
+      icon: '',
       title: 'Accès multi-plateforme',
       description: 'Travaillez depuis n\'importe où avec nos applications web, mobile et desktop synchronisées',
-      color: 'from-teal-500 to-blue-500',
-      bgColor: 'from-teal-50 to-blue-50'
+      color: 'info',
+      gradient: 'from-info-500 to-info-600',
+      bgGradient: 'from-info-50 to-info-100',
+      details: [
+        'Application mobile native',
+        'Interface web responsive',
+        'Synchronisation cloud',
+        'Mode hors ligne'
+      ],
+      image: ''
     },
     {
-      icon: 'security',
+      id: 'securite-renforcee',
+      icon: '',
       title: 'Sécurité renforcée',
       description: 'Vos données sont protégées par un chiffrement de niveau bancaire et des sauvegardes automatiques',
-      color: 'from-gray-600 to-gray-800',
-      bgColor: 'from-gray-50 to-gray-100'
+      color: 'muted',
+      gradient: 'from-muted-600 to-muted-700',
+      bgGradient: 'from-muted-50 to-muted-100',
+      details: [
+        'Chiffrement AES-256',
+        'Authentification 2FA',
+        'Sauvegardes automatiques',
+        'Conformité RGPD'
+      ],
+      image: ''
     }
   ];
 
-  const processus = [
+  const processSteps = [
     {
-      numero: '01',
-      titre: 'Créez votre projet',
-      description: 'Définissez vos besoins et trouvez les bons professionnels',
-      icon: 'project'
+      step: '01',
+      title: 'Inscription',
+      description: 'Créez votre compte et configurez votre profil professionnel',
+      icon: '',
+      color: 'primary'
     },
     {
-      numero: '02',
-      titre: 'Collaborez en équipe',
-      description: 'Coordonnez vos équipes et suivez chaque étape',
-      icon: 'team'
+      step: '02',
+      title: 'Configuration',
+      description: 'Personnalisez votre espace de travail selon vos besoins',
+      icon: '',
+      color: 'secondary'
     },
     {
-      numero: '03',
-      titre: 'Livrez avec succès',
-      description: 'Finalisez votre projet dans les temps et le budget',
-      icon: 'success'
+      step: '03',
+      title: 'Collaboration',
+      description: 'Invitez vos équipes et commencez à gérer vos projets',
+      icon: '',
+      color: 'success'
     }
   ];
+
+  const handleFeatureClick = (index) => {
+    setActiveFeature(index);
+    OptimizedAnalytics.trackEvent('feature_click', { 
+      feature_id: features[index].id,
+      feature_name: features[index].title 
+    });
+  };
 
   return (
-    <section className="py-20 px-4 bg-white relative overflow-hidden">
-      {/* Fond décoratif */}
+    <section className="py-20 bg-gradient-to-br from-white via-muted-50 to-white relative overflow-hidden">
+      
+      {/* Background Elements */}
       <div className="absolute inset-0 opacity-5">
-        <FinitioIllustration type="construction" size="xl" className="absolute top-20 left-10 rotate-12" />
-        <FinitioIllustration type="blueprint" size="lg" className="absolute bottom-20 right-10 -rotate-12" />
+        <div className="absolute top-32 right-20 w-96 h-96 bg-gradient-to-br from-primary-200 to-secondary-200 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-32 left-20 w-64 h-64 bg-gradient-to-br from-success-200 to-info-200 rounded-full blur-3xl animate-float"></div>
       </div>
 
-      <div className="container mx-auto relative z-10">
-        {/* En-tête de section */}
-        <div className="text-center mb-16 animate-fade-in-up">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Fonctionnalités 
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> avancées</span>
+      <div className="container relative z-10">
+        
+        {/* Header Section */}
+        <div className={`text-center mb-16 ${isVisible ? 'animate-slide-up' : 'opacity-0'}`}>
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-success-50 border border-success-200 rounded-full text-success-700 text-sm font-medium mb-6">
+            <span className="w-2 h-2 bg-success-500 rounded-full animate-pulse"></span>
+            Fonctionnalités avancées
+          </div>
+          
+          <h2 className="text-4xl lg:text-5xl font-extrabold mb-6">
+            <span className="bg-gradient-to-r from-success-600 via-primary-600 to-secondary-600 bg-clip-text text-transparent">
+              Tout ce dont vous avez besoin
+            </span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Découvrez tous les outils dont vous avez besoin pour mener à bien vos projets de construction, 
-            de la planification à la livraison.
+          
+          <p className="text-xl text-muted max-w-3xl mx-auto leading-relaxed">
+            Découvrez les outils puissants qui vont révolutionner votre façon de gérer vos projets de construction
           </p>
         </div>
 
-        {/* Grille des fonctionnalités */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
-          {fonctionnalites.map((fonctionnalite, index) => (
+        {/* Features Grid */}
+        <div className="grid lg:grid-cols-3 gap-8 mb-20">
+          {features.map((feature, index) => (
             <div 
-              key={index}
-              className="group relative animate-fade-in-up hover-lift"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              key={feature.id}
+              onClick={() => handleFeatureClick(index)}
+              className={`card cursor-pointer transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl ${
+                activeFeature === index 
+                  ? 'shadow-2xl scale-105 ring-2 ring-primary-500 ring-opacity-50' 
+                  : 'shadow-lg hover:shadow-xl'
+              }`}
             >
-              <div className={`p-8 rounded-3xl bg-gradient-to-br ${fonctionnalite.bgColor} border border-white/50 shadow-lg backdrop-blur-sm transition-all duration-500 group-hover:shadow-2xl h-full`}>
-                {/* Icône */}
-                <div className="mb-6">
-                  <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${fonctionnalite.color} shadow-lg transform group-hover:scale-110 transition-transform duration-300`}>
-                    <FinitioIcon 
-                      type={fonctionnalite.icon} 
-                      size="md" 
-                      className="filter brightness-0 invert" 
-                    />
+              <div className="card-body p-6">
+                {/* Icon */}
+                <div className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r ${feature.gradient} rounded-2xl text-white text-2xl mb-4 shadow-lg`}>
+                  <FinitioIcon type={feature.icon} size="md" className="filter brightness-0 invert" />
+                </div>
+                
+                {/* Content */}
+                <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
+                <p className="text-muted leading-relaxed mb-4">{feature.description}</p>
+                
+                {/* Details */}
+                <div className="space-y-2">
+                  {feature.details.map((detail, detailIndex) => (
+                    <div key={detailIndex} className="flex items-center gap-2 text-sm">
+                      <div className={`w-1.5 h-1.5 bg-${feature.color}-500 rounded-full`}></div>
+                      <span className="text-muted">{detail}</span>
+                    </div>
+                  ))}
+                </div>
+                
+                {/* Action */}
+                <div className="mt-4 pt-4 border-t border-border">
+                  <div className={`inline-flex items-center gap-2 text-${feature.color}-600 font-medium text-sm`}>
+                    <span>En savoir plus</span>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   </div>
                 </div>
-
-                {/* Contenu */}
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  {fonctionnalite.title}
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {fonctionnalite.description}
-                </p>
-
-                {/* Effet de survol */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${fonctionnalite.color} opacity-0 group-hover:opacity-5 rounded-3xl transition-opacity duration-300`}></div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Section processus */}
-        <div className="bg-gradient-to-br from-gray-50 to-white rounded-3xl p-12 animate-fade-in-up">
+        {/* Process Section */}
+        <div className="mb-20">
           <div className="text-center mb-12">
-            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h3 className="text-3xl lg:text-4xl font-bold mb-4">
               Comment ça marche ?
             </h3>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Un processus simple et efficace en 3 étapes
+            <p className="text-lg text-muted max-w-2xl mx-auto">
+              Commencez à utiliser Finitio en 3 étapes simples
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {processus.map((etape, index) => (
-              <div 
-                key={index}
-                className="relative text-center animate-slide-in-right"
-                style={{ animationDelay: `${index * 0.2}s` }}
-              >
-                {/* Ligne de connexion */}
-                {index < processus.length - 1 && (
-                  <div className="hidden md:block absolute top-16 left-1/2 w-full h-0.5 bg-gradient-to-r from-blue-300 to-purple-300 transform translate-x-1/2 z-0"></div>
+          <div className="grid lg:grid-cols-3 gap-8">
+            {processSteps.map((step, index) => (
+              <div key={index} className="relative">
+                {/* Connection Line */}
+                {index < processSteps.length - 1 && (
+                  <div className="hidden lg:block absolute top-16 left-full w-full h-0.5 bg-gradient-to-r from-primary-200 to-secondary-200 z-0"></div>
                 )}
-
-                {/* Numéro */}
-                <div className="relative z-10 w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                  {etape.numero}
+                
+                <div className="card shadow-lg hover:shadow-xl transition-all duration-300 relative z-10">
+                  <div className="card-body p-8 text-center">
+                    {/* Step Number */}
+                    <div className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-${step.color}-500 to-${step.color}-600 rounded-full text-white text-xl font-bold mb-6 shadow-lg`}>
+                      {step.step}
+                    </div>
+                    
+                    {/* Icon */}
+                    <div className="text-4xl mb-4">
+                      <FinitioIcon type={step.icon} size="lg" className="mx-auto opacity-80" />
+                    </div>
+                    
+                    {/* Content */}
+                    <h4 className="text-xl font-bold mb-3">{step.title}</h4>
+                    <p className="text-muted leading-relaxed">{step.description}</p>
+                  </div>
                 </div>
-
-                {/* Icône */}
-                <div className="mb-4">
-                  <FinitioIcon 
-                    type={etape.icon} 
-                    size="lg" 
-                    className="mx-auto opacity-80" 
-                  />
-                </div>
-
-                {/* Contenu */}
-                <h4 className="text-xl font-bold text-gray-900 mb-3">
-                  {etape.titre}
-                </h4>
-                <p className="text-gray-600">
-                  {etape.description}
-                </p>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Section CTA */}
-        <div className="text-center mt-16 animate-fade-in-up">
-          <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 rounded-3xl p-12 text-white">
-            <h3 className="text-3xl md:text-4xl font-bold mb-6">
-              Prêt à transformer vos projets ?
-            </h3>
-            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Rejoignez des milliers de professionnels qui utilisent déjà Finitio pour optimiser leurs chantiers
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="btn-premium group">
-                <span className="flex items-center justify-center gap-3">
-                  <svg className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                  Commencer gratuitement
-                </span>
-              </button>
-              
-              <button className="px-8 py-4 rounded-2xl font-semibold text-white border-2 border-white/30 hover:border-white/60 transition-all duration-300 transform hover:scale-105 backdrop-blur-sm hover:bg-white/10">
-                <span className="flex items-center justify-center gap-3">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                  </svg>
-                  Voir la démo
-                </span>
-              </button>
+        {/* CTA Section */}
+        <div className="text-center">
+          <div className="card shadow-2xl overflow-hidden bg-gradient-to-r from-primary-600 via-secondary-600 to-success-600 text-white">
+            <div className="card-body p-12">
+              <div className="max-w-3xl mx-auto">
+                <h3 className="text-3xl lg:text-4xl font-bold mb-6">
+                  Prêt à transformer vos projets ?
+                </h3>
+                <p className="text-xl text-primary-100 mb-8 leading-relaxed">
+                  Rejoignez des milliers de professionnels qui ont déjà révolutionné leur façon de travailler avec Finitio
+                </p>
+                
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <button 
+                    className="btn bg-white text-primary-600 px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-105"
+                    onClick={() => OptimizedAnalytics.trackEvent('cta_start_free', { location: 'fonctionnalites' })}
+                  >
+                    <span>Commencer gratuitement</span>
+                    <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </button>
+                  
+                  <button 
+                    className="btn border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-primary-600 transition-all"
+                    onClick={() => OptimizedAnalytics.trackEvent('cta_demo', { location: 'fonctionnalites' })}
+                  >
+                    <span>Voir la démo</span>
+                  </button>
+                </div>
+                
+                <div className="mt-8 flex items-center justify-center gap-6 text-primary-100">
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    <span>Essai gratuit 30 jours</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    <span>Aucune carte requise</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    <span>Support 24/7</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
