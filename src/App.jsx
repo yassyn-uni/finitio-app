@@ -10,7 +10,7 @@ import Inscription from './components/Inscription';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { supabase } from './supabaseClient';
 import './utils/analytics';
-import { NotificationContainer } from './components/NotificationContainer';
+import NotificationContainer from './components/NotificationContainer';
 import OptimizedAnalytics from './utils/optimizedAnalytics';
 import usePageTracking from './hooks/usePageTracking';
 
