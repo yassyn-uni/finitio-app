@@ -9,6 +9,13 @@ import Inscription from './components/Inscription';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { supabase } from './supabaseClient';
 import './utils/analytics';
+import { UserProvider } from './contexts/UserContext';
+import { NotificationContainer } from './components/NotificationContainer';
+import OptimizedAnalytics from './utils/optimizedAnalytics';
+import usePageTracking from './hooks/usePageTracking';
+
+// Import du thème Materio
+import './styles/materioTheme.css';
 
 import Dashboard from './pages/Dashboard';
 import DashboardClient from './pages/DashboardClient';
@@ -34,15 +41,11 @@ import ResetPassword from './pages/ResetPassword';
 import GestionEtapes from './pages/GestionEtapes';
 import ProjetsDisponibles from './pages/ProjetsDisponibles';
 import AnalyticsDashboard from './pages/AnalyticsDashboard';
-import NotificationContainer from './components/NotificationContainer';
-
-import { useRouteTracking } from './hooks/usePageTracking';
-import OptimizedAnalytics from './utils/optimizedAnalytics';
 
 // 🎯 Composant wrapper pour tracker les routes avec système optimisé
 function AppWithTracking() {
   // Tracker automatiquement tous les changements de route avec le système optimisé
-  useRouteTracking(OptimizedAnalytics);
+  usePageTracking(OptimizedAnalytics);
 
   return (
     <Routes>
@@ -125,8 +128,10 @@ function AppWithTracking() {
 function App() {
   return (
     <Router>
-      <AppWithTracking />
-      <NotificationContainer />
+      <UserProvider>
+        <AppWithTracking />
+        <NotificationContainer />
+      </UserProvider>
     </Router>
   );
 }
