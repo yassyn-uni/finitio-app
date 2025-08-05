@@ -125,15 +125,6 @@ const Fonctionnalites = () => {
               </div>
             ))}
           </div>
-
-          {/* Photo d'équipe */}
-          <div className="photo-container max-w-4xl mx-auto mt-12">
-            <img 
-              src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=2126&q=80"
-              alt="Réunion de chantier avec équipe utilisant des tablettes"
-              className="w-full h-auto"
-            />
-          </div>
         </div>
       </section>
 
