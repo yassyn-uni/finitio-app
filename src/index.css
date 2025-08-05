@@ -1,3 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Améliorations Mobile */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Améliorer la lisibilité sur mobile */
+  @media (max-width: 768px) {
+    body {
+      font-size: 16px; /* Évite le zoom automatique sur iOS */
+    }
+  }
+}
+
+@layer components {
+  /* Conteneur responsive standard */
+  .container-responsive {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  /* Boutons responsive */
+  .btn-primary {
+    @apply bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 sm:py-3 sm:px-6 rounded-lg transition-colors duration-200 text-sm sm:text-base;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 sm:py-3 sm:px-6 rounded-lg transition-colors duration-200 text-sm sm:text-base;
+  }
+  
+  /* Titres responsive */
+  .title-responsive {
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight;
+  }
+  
+  .subtitle-responsive {
+    @apply text-lg sm:text-xl md:text-2xl font-semibold leading-relaxed;
+  }
+  
+  /* Cards responsive */
+  .card-responsive {
+    @apply bg-white rounded-lg shadow-md p-4 sm:p-6 hover:shadow-lg transition-shadow duration-200;
+  }
+}
+
+@layer utilities {
+  /* Espacement mobile optimisé */
+  .section-padding {
+    @apply py-8 sm:py-12 md:py-16 lg:py-20;
+  }
+  
+  .section-padding-sm {
+    @apply py-4 sm:py-6 md:py-8;
+  }
+  
+  /* Texte responsive */
+  .text-responsive {
+    @apply text-sm sm:text-base md:text-lg;
+  }
+  
+  /* Grilles responsive */
+  .grid-responsive {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8;
+  }
+  
+  /* Hauteur minimum pour éviter les problèmes de viewport mobile */
+  .min-h-screen-mobile {
+    min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height pour mobile */
+  }
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
