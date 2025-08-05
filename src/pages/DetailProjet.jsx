@@ -59,15 +59,23 @@ export default function DetailProjet() {
             📍 Localisation : {projet.localisation} &nbsp; | &nbsp; 💰 Budget : {projet.budget} MAD
           </p>
 
-          {/* Lien ajouter étape */}
+          {/* Liens étapes */}
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold">📋 Étapes du projet</h3>
-            <Link
-              to={`/projet/${id}/ajouter-etape`}
-              className="text-blue-600 underline hover:text-blue-800"
-            >
-              ➕ Ajouter une étape
-            </Link>
+            <div className="flex gap-3">
+              <Link
+                to={`/projets/${id}/kanban`}
+                className="bg-teal-500 text-white px-3 py-1 rounded hover:bg-teal-600 transition-colors text-sm"
+              >
+                📋 Voir Kanban
+              </Link>
+              <Link
+                to={`/projets/${id}/ajouter-etape`}
+                className="text-blue-600 underline hover:text-blue-800"
+              >
+                ➕ Ajouter une étape
+              </Link>
+            </div>
           </div>
 
           <EtapesKanban />
@@ -77,7 +85,7 @@ export default function DetailProjet() {
           <div className="flex items-center justify-between mt-8 mb-4">
             <h3 className="text-lg font-semibold">📄 Devis associés</h3>
             <Link
-              to={`/projet/${id}/ajouter-devis`}
+              to={`/projets/${id}/ajouter-devis`}
               className="text-green-600 underline hover:text-green-800"
             >
               ➕ Ajouter un devis
