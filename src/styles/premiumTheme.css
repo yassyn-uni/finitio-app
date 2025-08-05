@@ -1,12 +1,13 @@
-/* 🏗️ FINITIO PREMIUM THEME - Construction Excellence */
-/* ================================================== */
+/* 🏗️ FINITIO PREMIUM THEME V2 - Construction Excellence */
+/* ===================================================== */
+/* Palette harmonisée et accessible pour l'industrie BTP */
 
 /* 📝 POLICES PREMIUM */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
-/* 🎨 VARIABLES CSS - CHARTE COULEURS PREMIUM */
+/* 🎨 PALETTE COULEURS PREMIUM HARMONISÉE */
 :root {
-  /* === COULEURS PRINCIPALES === */
+  /* === COULEURS PRINCIPALES (Slate Premium) === */
   --primary-50: #f8fafc;
   --primary-100: #f1f5f9;
   --primary-200: #e2e8f0;
@@ -18,43 +19,67 @@
   --primary-800: #1e293b;
   --primary-900: #0f172a;
 
-  /* === COULEURS ACCENT PREMIUM === */
-  --accent-50: #fef7ee;
-  --accent-100: #fdedd3;
-  --accent-200: #fbd6a5;
-  --accent-300: #f7b86d;
-  --accent-400: #f29332;
-  --accent-500: #ea7611;
-  --accent-600: #db5a07;
-  --accent-700: #b64309;
-  --accent-800: #92350f;
-  --accent-900: #762c10;
+  /* === COULEURS ACCENT (Orange Construction Premium) === */
+  --accent-50: #fff7ed;
+  --accent-100: #ffedd5;
+  --accent-200: #fed7aa;
+  --accent-300: #fdba74;
+  --accent-400: #fb923c;
+  --accent-500: #f97316;  /* Orange principal - Contraste AAA */
+  --accent-600: #ea580c;  /* Orange foncé - CTA principal */
+  --accent-700: #c2410c;  /* Orange très foncé - Hover */
+  --accent-800: #9a3412;
+  --accent-900: #7c2d12;
 
-  /* === COULEURS SUCCÈS === */
+  /* === COULEURS SECONDAIRES (Terre/Construction) === */
+  --secondary-50: #fefdf8;
+  --secondary-100: #fefbf3;
+  --secondary-200: #fef7e7;
+  --secondary-300: #feeccd;
+  --secondary-400: #fddd9b;
+  --secondary-500: #fbbf24;  /* Jaune construction */
+  --secondary-600: #d97706;  /* Ambre */
+  --secondary-700: #b45309;
+  --secondary-800: #92400e;
+  --secondary-900: #78350f;
+
+  /* === COULEURS SUCCÈS (Vert Premium) === */
   --success-50: #f0fdf4;
   --success-100: #dcfce7;
   --success-200: #bbf7d0;
   --success-300: #86efac;
   --success-400: #4ade80;
-  --success-500: #22c55e;
-  --success-600: #16a34a;
+  --success-500: #22c55e;  /* Vert principal */
+  --success-600: #16a34a;  /* Vert foncé - Contraste AAA */
   --success-700: #15803d;
   --success-800: #166534;
   --success-900: #14532d;
 
-  /* === COULEURS ERREUR === */
+  /* === COULEURS ERREUR (Rouge Premium) === */
   --error-50: #fef2f2;
   --error-100: #fee2e2;
   --error-200: #fecaca;
   --error-300: #fca5a5;
   --error-400: #f87171;
   --error-500: #ef4444;
-  --error-600: #dc2626;
+  --error-600: #dc2626;  /* Rouge principal - Contraste AAA */
   --error-700: #b91c1c;
   --error-800: #991b1b;
   --error-900: #7f1d1d;
 
-  /* === COULEURS NEUTRES === */
+  /* === COULEURS WARNING (Orange-Jaune) === */
+  --warning-50: #fffbeb;
+  --warning-100: #fef3c7;
+  --warning-200: #fde68a;
+  --warning-300: #fcd34d;
+  --warning-400: #fbbf24;
+  --warning-500: #f59e0b;
+  --warning-600: #d97706;  /* Warning principal */
+  --warning-700: #b45309;
+  --warning-800: #92400e;
+  --warning-900: #78350f;
+
+  /* === COULEURS NEUTRES (Gris Premium) === */
   --neutral-50: #fafafa;
   --neutral-100: #f5f5f5;
   --neutral-200: #e5e5e5;
@@ -196,7 +221,7 @@ a:hover {
   text-decoration: underline;
 }
 
-/* 🎯 BOUTONS PREMIUM */
+/* 🎯 BOUTONS PREMIUM HARMONISÉS */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -222,7 +247,7 @@ a:hover {
   cursor: not-allowed;
 }
 
-/* Bouton Principal */
+/* Bouton Principal (Orange Premium) */
 .btn-primary {
   color: white;
   background: linear-gradient(135deg, var(--accent-600), var(--accent-700));
@@ -236,7 +261,7 @@ a:hover {
   transform: translateY(-1px);
 }
 
-/* Bouton Secondaire */
+/* Bouton Secondaire (Neutre Premium) */
 .btn-secondary {
   color: var(--primary-700);
   background-color: white;
@@ -250,7 +275,7 @@ a:hover {
   box-shadow: var(--shadow-md);
 }
 
-/* Bouton Outline */
+/* Bouton Outline (Orange Outline) */
 .btn-outline {
   color: var(--accent-600);
   background-color: transparent;
@@ -261,6 +286,20 @@ a:hover {
   color: white;
   background-color: var(--accent-600);
   box-shadow: var(--shadow-md);
+}
+
+/* Bouton Success */
+.btn-success {
+  color: white;
+  background: linear-gradient(135deg, var(--success-600), var(--success-700));
+  border-color: var(--success-600);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-success:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--success-700), var(--success-800));
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
 /* Tailles de boutons */
@@ -332,7 +371,7 @@ a:hover {
 .form-input:focus {
   outline: none;
   border-color: var(--accent-500);
-  box-shadow: 0 0 0 3px rgba(234, 118, 17, 0.1);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
 }
 
 .form-input::placeholder {
@@ -360,12 +399,12 @@ a:hover {
 }
 
 .alert-warning {
-  color: var(--accent-800);
-  background-color: var(--accent-50);
-  border-color: var(--accent-200);
+  color: var(--warning-800);
+  background-color: var(--warning-50);
+  border-color: var(--warning-200);
 }
 
-/* 🎨 UTILITIES */
+/* 🎨 UTILITIES HARMONISÉES */
 .text-center { text-align: center; }
 .text-left { text-align: left; }
 .text-right { text-align: right; }
@@ -380,11 +419,13 @@ a:hover {
 .text-accent { color: var(--accent-600); }
 .text-success { color: var(--success-600); }
 .text-error { color: var(--error-600); }
+.text-warning { color: var(--warning-600); }
 
 .bg-primary { background-color: var(--primary-600); }
 .bg-accent { background-color: var(--accent-600); }
 .bg-success { background-color: var(--success-600); }
 .bg-error { background-color: var(--error-600); }
+.bg-warning { background-color: var(--warning-600); }
 
 /* 📱 RESPONSIVE */
 @media (max-width: 768px) {
@@ -420,15 +461,19 @@ a:hover {
   animation: slideIn 0.6s ease-out;
 }
 
-/* 🎯 FOCUS STATES */
+/* 🎯 FOCUS STATES ACCESSIBLES */
 .focus-ring:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(234, 118, 17, 0.2);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);
 }
 
-/* 🏗️ CONSTRUCTION SPECIFIC STYLES */
+/* 🏗️ CONSTRUCTION SPECIFIC STYLES HARMONISÉS */
 .construction-gradient {
   background: linear-gradient(135deg, var(--primary-800), var(--primary-600));
+}
+
+.construction-accent-gradient {
+  background: linear-gradient(135deg, var(--accent-600), var(--accent-700));
 }
 
 .premium-border {
@@ -441,4 +486,39 @@ a:hover {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-effect-dark {
+  background: rgba(30, 41, 59, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 🎨 STATS CARDS HARMONISÉES */
+.stats-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(249, 115, 22, 0.2);
+  border-radius: var(--border-radius-xl);
+  padding: var(--space-6);
+  transition: var(--transition-normal);
+}
+
+.stats-card:hover {
+  border-color: rgba(249, 115, 22, 0.4);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.stats-number {
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  color: var(--accent-600);
+  margin-bottom: var(--space-2);
+}
+
+.stats-label {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  font-size: var(--text-sm);
 }

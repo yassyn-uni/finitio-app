@@ -77,13 +77,13 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           
-          {/* Logo Premium */}
+          {/* Logo Premium Harmonisé */}
           <Link 
             to="/" 
             className="flex items-center space-x-3 hover:opacity-80 transition-all duration-300 group"
             onClick={() => handleNavClick('logo')}
           >
-            <div className="p-3 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300">
+            <div className="p-3 construction-accent-gradient rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300">
               <FinitioLogo variant="main" size="sm" className="filter brightness-0 invert" />
             </div>
             <div className="hidden sm:block">
@@ -92,7 +92,7 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* Navigation principale - Desktop */}
+          {/* Navigation principale harmonisée */}
           <div className="hidden md:flex items-center space-x-2">
             {navLinks.map((link) => (
               <Link
@@ -101,8 +101,8 @@ export default function Navbar() {
                 onClick={() => handleNavClick(link.name.toLowerCase())}
                 className={`flex items-center space-x-2 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${
                   location.pathname === link.path
-                    ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg'
-                    : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50'
+                    ? 'construction-accent-gradient text-white shadow-lg'
+                    : 'text-gray-700 hover:text-accent-600 hover:bg-accent-50'
                 }`}
               >
                 <span className="text-base">{link.icon}</span>
@@ -111,7 +111,7 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Actions utilisateur */}
+          {/* Actions utilisateur harmonisées */}
           <div className="flex items-center space-x-4">
             {loading ? (
               <div className="w-10 h-10 bg-gray-200 rounded-xl animate-pulse"></div>
@@ -121,7 +121,7 @@ export default function Navbar() {
                   onClick={handleProfileToggle}
                   className="flex items-center space-x-3 p-2 rounded-xl hover:bg-white hover:bg-opacity-50 transition-all duration-300 group"
                 >
-                  <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-lg group-hover:shadow-xl transition-all duration-300">
+                  <div className="w-12 h-12 construction-accent-gradient rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-lg group-hover:shadow-xl transition-all duration-300">
                     {profil.nom?.charAt(0)?.toUpperCase() || 'U'}
                   </div>
                   <div className="hidden sm:block text-left">
@@ -133,18 +133,18 @@ export default function Navbar() {
                   </svg>
                 </button>
 
-                {/* Menu profil premium */}
+                {/* Menu profil premium harmonisé */}
                 {showProfileMenu && (
                   <div className="absolute right-0 mt-2 w-72 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-50 animate-fade-in">
                     <div className="px-6 py-4 border-b border-gray-100">
                       <div className="flex items-center space-x-4">
-                        <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                        <div className="w-16 h-16 construction-accent-gradient rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg">
                           {profil.nom?.charAt(0)?.toUpperCase() || 'U'}
                         </div>
                         <div>
                           <div className="font-semibold text-gray-900 text-lg">{profil.nom}</div>
                           <div className="text-sm text-gray-500">{profil.email}</div>
-                          <div className="text-xs text-orange-600 font-medium capitalize bg-orange-50 px-2 py-1 rounded-full mt-1">
+                          <div className="text-xs text-accent-600 font-medium capitalize bg-accent-50 px-2 py-1 rounded-full mt-1">
                             {profil.role}
                           </div>
                         </div>
@@ -154,7 +154,7 @@ export default function Navbar() {
                     <div className="py-2">
                       <Link
                         to={`/dashboard-${profil.role}`}
-                        className="flex items-center px-6 py-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors"
+                        className="flex items-center px-6 py-3 text-gray-700 hover:bg-accent-50 hover:text-accent-600 transition-colors"
                         onClick={() => setShowProfileMenu(false)}
                       >
                         <span className="mr-3">📊</span>
@@ -163,7 +163,7 @@ export default function Navbar() {
                       
                       <Link
                         to="/profil"
-                        className="flex items-center px-6 py-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors"
+                        className="flex items-center px-6 py-3 text-gray-700 hover:bg-accent-50 hover:text-accent-600 transition-colors"
                         onClick={() => setShowProfileMenu(false)}
                       >
                         <span className="mr-3">👤</span>
@@ -172,7 +172,7 @@ export default function Navbar() {
                       
                       <Link
                         to="/parametres"
-                        className="flex items-center px-6 py-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors"
+                        className="flex items-center px-6 py-3 text-gray-700 hover:bg-accent-50 hover:text-accent-600 transition-colors"
                         onClick={() => setShowProfileMenu(false)}
                       >
                         <span className="mr-3">⚙️</span>
@@ -221,7 +221,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Menu mobile */}
+        {/* Menu mobile harmonisé */}
         {showMobileMenu && (
           <div className="md:hidden py-4 border-t border-white border-opacity-20 animate-fade-in">
             <div className="space-y-2">
@@ -235,8 +235,8 @@ export default function Navbar() {
                   }}
                   className={`flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
                     location.pathname === link.path
-                      ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white'
-                      : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50'
+                      ? 'construction-accent-gradient text-white'
+                      : 'text-gray-700 hover:text-accent-600 hover:bg-accent-50'
                   }`}
                 >
                   <span className="text-base">{link.icon}</span>
