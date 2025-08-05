@@ -9,7 +9,7 @@ import Connexion from './components/Connexion';
 import Inscription from './components/Inscription';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { supabase } from './supabaseClient';
-import './utils/analytics';
+// SUPPRIMÉ: import './utils/analytics'; - Causait les erreurs 400
 import NotificationContainer from './components/NotificationContainer';
 
 // Import du thème Materio
