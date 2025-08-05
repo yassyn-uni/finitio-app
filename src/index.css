@@ -2,6 +2,301 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Variables CSS pour thème cohérent */
+:root {
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  --danger-gradient: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Animations fluides */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Classes utilitaires personnalisées */
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.5s ease-out forwards;
+}
+
+.animate-pulse-soft {
+  animation: pulse 2s infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Effets de verre (glassmorphism) */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-soft);
+}
+
+.glass-card:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+/* Gradients modernes */
+.gradient-primary {
+  background: var(--primary-gradient);
+}
+
+.gradient-success {
+  background: var(--success-gradient);
+}
+
+.gradient-warning {
+  background: var(--warning-gradient);
+}
+
+.gradient-danger {
+  background: var(--danger-gradient);
+}
+
+/* Boutons avec effets */
+.btn-modern {
+  @apply px-6 py-3 rounded-xl font-medium transition-all duration-300 transform;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-modern:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.btn-modern:active {
+  transform: translateY(0);
+}
+
+.btn-primary {
+  @apply btn-modern text-white;
+  background: var(--primary-gradient);
+}
+
+.btn-success {
+  @apply btn-modern text-white;
+  background: var(--success-gradient);
+}
+
+.btn-warning {
+  @apply btn-modern text-white;
+  background: var(--warning-gradient);
+}
+
+.btn-danger {
+  @apply btn-modern text-white;
+  background: var(--danger-gradient);
+}
+
+/* Cards avec effets */
+.card-modern {
+  @apply bg-white rounded-2xl shadow-lg border-0 overflow-hidden transition-all duration-300;
+}
+
+.card-modern:hover {
+  @apply shadow-2xl;
+  transform: translateY(-4px);
+}
+
+.card-interactive {
+  @apply card-modern cursor-pointer;
+}
+
+.card-interactive:hover {
+  @apply shadow-2xl;
+  transform: translateY(-6px) scale(1.02);
+}
+
+/* Inputs modernes */
+.input-modern {
+  @apply w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-300 outline-none;
+}
+
+.input-modern:focus {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.1);
+}
+
+/* Badges avec gradients */
+.badge-modern {
+  @apply px-3 py-1 rounded-full text-xs font-semibold;
+}
+
+.badge-success {
+  @apply badge-modern text-white;
+  background: var(--success-gradient);
+}
+
+.badge-warning {
+  @apply badge-modern text-white;
+  background: var(--warning-gradient);
+}
+
+.badge-danger {
+  @apply badge-modern text-white;
+  background: var(--danger-gradient);
+}
+
+/* Barres de progression modernes */
+.progress-modern {
+  @apply w-full bg-gray-200 rounded-full h-3 overflow-hidden;
+}
+
+.progress-bar {
+  @apply h-full rounded-full transition-all duration-700 ease-out;
+  background: var(--success-gradient);
+}
+
+/* Effets de survol pour les listes */
+.list-item-modern {
+  @apply p-4 rounded-xl transition-all duration-300 cursor-pointer;
+}
+
+.list-item-modern:hover {
+  @apply bg-gray-50 shadow-md;
+  transform: translateX(4px);
+}
+
+/* Skeleton loading */
+.skeleton {
+  @apply animate-shimmer rounded;
+}
+
+/* Scrollbar personnalisée */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-gradient);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Responsive amélioré */
+@media (max-width: 768px) {
+  .card-modern {
+    @apply mx-2;
+  }
+  
+  .btn-modern {
+    @apply px-4 py-2 text-sm;
+  }
+}
+
+/* Transitions globales */
+* {
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Focus states améliorés */
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  ring: 4px;
+  ring-color: rgba(59, 130, 246, 0.3);
+}
+
+/* Effets de chargement */
+.loading-dots {
+  display: inline-block;
+}
+
+.loading-dots::after {
+  content: '';
+  animation: loading-dots 1.5s infinite;
+}
+
+@keyframes loading-dots {
+  0%, 20% {
+    content: '';
+  }
+  40% {
+    content: '.';
+  }
+  60% {
+    content: '..';
+  }
+  80%, 100% {
+    content: '...';
+  }
+}
+
 /* Améliorations Mobile */
 @layer base {
   html {
