@@ -11,8 +11,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { supabase } from './supabaseClient';
 import './utils/analytics';
 import NotificationContainer from './components/NotificationContainer';
-import OptimizedAnalytics from './utils/optimizedAnalytics';
-import usePageTracking from './hooks/usePageTracking';
 
 // Import du thème Materio
 import './styles/materioTheme.css';
@@ -45,7 +43,7 @@ import AnalyticsDashboard from './pages/AnalyticsDashboard';
 // 🎯 Composant wrapper pour tracker les routes avec système optimisé
 function AppWithTracking() {
   // Tracker automatiquement tous les changements de route avec le système optimisé
-  usePageTracking(OptimizedAnalytics);
+  // usePageTracking(OptimizedAnalytics);
 
   return (
     <Routes>

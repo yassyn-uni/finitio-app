@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import OptimizedAnalytics from '../utils/optimizedAnalytics';
 
 export default function Pourquoi() {
   const [activeTab, setActiveTab] = useState(0);
@@ -7,7 +6,6 @@ export default function Pourquoi() {
 
   useEffect(() => {
     setIsVisible(true);
-    OptimizedAnalytics.trackEvent('pourquoi_section_view');
   }, []);
 
   const roles = [
@@ -148,10 +146,6 @@ export default function Pourquoi() {
 
   const handleTabClick = (index) => {
     setActiveTab(index);
-    OptimizedAnalytics.trackEvent('pourquoi_tab_click', { 
-      tab: roles[index].id,
-      tab_name: roles[index].title 
-    });
   };
 
   return (

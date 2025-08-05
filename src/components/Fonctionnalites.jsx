@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import OptimizedAnalytics from '../utils/optimizedAnalytics';
 import { FinitioIcon } from '../assets/FinitioAssets';
 
 export default function Fonctionnalites() {
@@ -8,7 +7,6 @@ export default function Fonctionnalites() {
 
   useEffect(() => {
     setIsVisible(true);
-    OptimizedAnalytics.trackEvent('fonctionnalites_section_view');
   }, []);
 
   const features = [
@@ -136,10 +134,6 @@ export default function Fonctionnalites() {
 
   const handleFeatureClick = (index) => {
     setActiveFeature(index);
-    OptimizedAnalytics.trackEvent('feature_click', { 
-      feature_id: features[index].id,
-      feature_name: features[index].title 
-    });
   };
 
   return (
@@ -273,7 +267,6 @@ export default function Fonctionnalites() {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <button 
                     className="btn bg-white text-primary-600 px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-105"
-                    onClick={() => OptimizedAnalytics.trackEvent('cta_start_free', { location: 'fonctionnalites' })}
                   >
                     <span>Commencer gratuitement</span>
                     <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -283,7 +276,6 @@ export default function Fonctionnalites() {
                   
                   <button 
                     className="btn border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-primary-600 transition-all"
-                    onClick={() => OptimizedAnalytics.trackEvent('cta_demo', { location: 'fonctionnalites' })}
                   >
                     <span>Voir la démo</span>
                   </button>

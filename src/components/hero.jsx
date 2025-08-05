@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import OptimizedAnalytics from '../utils/optimizedAnalytics';
 
 export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -8,7 +7,6 @@ export default function Hero() {
 
   useEffect(() => {
     setIsVisible(true);
-    OptimizedAnalytics.trackEvent('hero_view');
   }, []);
 
   const slides = [
@@ -43,7 +41,6 @@ export default function Hero() {
   }, [slides.length]);
 
   const handleCTAClick = (action) => {
-    OptimizedAnalytics.trackEvent('hero_cta_click', { action });
   };
 
   return (
