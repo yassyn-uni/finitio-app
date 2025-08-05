@@ -5,8 +5,9 @@ const modules = [
   { title: 'Mes projets', icon: '🏗️', link: '/projets' },
   { title: 'Créer un projet', icon: '➕', link: '/nouveau-projet' },
   { title: 'Suivi de mes projets', icon: '📊', link: '/projets/suivi' },
-  { title: 'Paiements & devis', icon: '💸', link: '/projets/paiements' },
-  { title: 'Liste d’achats', icon: '🧰', link: '/projets/liste-achats' },
+  { title: 'Paiements', icon: '💳', link: '/paiements' },
+  { title: 'Devis', icon: '📋', link: '/devis' },
+  { title: 'Liste d\'achats', icon: '🧰', link: '/liste-achats' },
   { title: 'Trouver un prestataire', icon: '🔍', link: '/annuaire-prestataires' },
   { title: 'Messagerie', icon: '📬', link: '/messages' },
 ];

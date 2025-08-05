@@ -27,6 +27,10 @@ import EtapesProjet from './pages/EtapesProjet';
 import EtapesKanban from './pages/EtapesKanban';
 import Messages from './pages/Messages';
 import ResetPassword from './pages/ResetPassword';
+import Paiements from './pages/Paiements';
+import Devis from './pages/Devis';
+import ListeAchats from './pages/ListeAchats';
+import ValidationDevis from './pages/ValidationDevis';
 
 // ✅ FONCTION PRINCIPALE (AVEC TOUTES LES ROUTES)
 function App() {
@@ -62,6 +66,11 @@ function App() {
 
         {/* Messages */}
         <Route path="/messages" element={<Messages />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/paiements" element={<Paiements />} />
+        <Route path="/devis" element={<Devis />} />
+        <Route path="/liste-achats" element={<ListeAchats />} />
+        <Route path="/validation-devis" element={<ValidationDevis />} />
 
         {/* Projets */}
         <Route path="/nouveau-projet" element={<NouveauProjet />} />

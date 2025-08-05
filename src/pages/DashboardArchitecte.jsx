@@ -5,7 +5,7 @@ const modules = [
   { title: 'Créer un projet', icon: '🏗️', link: '/nouveau-projet' },
   { title: 'Mes projets', icon: '📁', link: '/projets' },
   { title: 'Gestion des étapes', icon: '📋', link: '/projets' },
-  { title: 'Validation des devis', icon: '✅', link: '/projets' },
+  { title: 'Validation des devis', icon: '✅', link: '/validation-devis' },
   { title: 'Annuaire prestataires', icon: '📋', link: '/annuaire-prestataires' },
 ];
 

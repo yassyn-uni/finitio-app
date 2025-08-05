@@ -4,8 +4,9 @@ import { Link } from 'react-router-dom';
 const modules = [
   { title: 'Projets disponibles', icon: '📋', link: '/projets' },
   { title: 'Soumettre un devis', icon: '📤', link: '/devis/nouveau' },
-  { title: 'Suivi de mes devis', icon: '🧾', link: '/devis/suivi' },
-  { title: 'Messagerie', icon: '📨', link: '/projets' },
+  { title: 'Mes devis', icon: '🧾', link: '/devis' },
+  { title: 'Paiements', icon: '💳', link: '/paiements' },
+  { title: 'Messagerie', icon: '📨', link: '/messages' },
 ];
 
 export default function DashboardPrestataire() {
