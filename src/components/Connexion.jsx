@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 
 export default function Connexion() {
@@ -104,6 +105,14 @@ console.log("❌ Erreur auth:", authError);
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1e3a8a]"
               required
             />
+            <div className="mt-2 text-right">
+              <Link 
+                to="/reset-password" 
+                className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
+              >
+                Mot de passe oublié ?
+              </Link>
+            </div>
           </div>
 
           <button

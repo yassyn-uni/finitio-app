@@ -26,6 +26,7 @@ import AnnuairePrestataires from './pages/AnnuairePrestataires';
 import EtapesProjet from './pages/EtapesProjet';
 import EtapesKanban from './pages/EtapesKanban';
 import Messages from './pages/Messages';
+import ResetPassword from './pages/ResetPassword';
 
 // ✅ FONCTION PRINCIPALE (AVEC TOUTES LES ROUTES)
 function App() {
@@ -51,6 +52,7 @@ function App() {
         {/* Auth */}
         <Route path="/inscription" element={<Inscription />} />
         <Route path="/connexion" element={<Connexion />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* Dashboards */}
         <Route path="/dashboard" element={<Dashboard />} />
