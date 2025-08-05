@@ -213,9 +213,7 @@
 }
 
 /* 🔧 FORCE OVERRIDE POUR TOUS LES CAS */
-* {
-  /* Remplacer toutes les couleurs bleues */
-}
+/* Règle globale supprimée pour éviter les règles vides */
 
 *[class*="blue-"] {
   color: #ea580c !important;

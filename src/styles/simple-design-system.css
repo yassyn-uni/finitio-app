@@ -1,0 +1,388 @@
+/* 🎨 FINITIO - DESIGN SYSTEM SIMPLIFIÉ */
+/* Gris foncé + Orange + Blanc */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+:root {
+  /* Couleurs principales */
+  --dark-gray: #1f2937;
+  --medium-gray: #374151;
+  --light-gray: #6b7280;
+  --orange: #f97316;
+  --orange-light: #fb923c;
+  --orange-dark: #ea580c;
+  --white: #ffffff;
+  --black: #000000;
+  
+  /* Ombres */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Reset et base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--dark-gray);
+  color: var(--white);
+  line-height: 1.6;
+}
+
+/* 📝 TYPOGRAPHIE */
+.heading-1 {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 1rem;
+}
+
+.heading-2 {
+  font-size: 2.25rem;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 0.75rem;
+}
+
+.heading-3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 0.5rem;
+}
+
+.text-orange {
+  color: var(--orange) !important;
+}
+
+.text-white {
+  color: var(--white) !important;
+}
+
+.text-gray {
+  color: var(--light-gray) !important;
+}
+
+/* 🔘 BOUTONS SIMPLIFIÉS */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  font-size: 1rem;
+  min-height: 44px;
+}
+
+.btn-orange {
+  background-color: var(--orange);
+  color: var(--white);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-orange:hover {
+  background-color: var(--orange-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-white {
+  background-color: var(--white);
+  color: var(--dark-gray);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-white:hover {
+  background-color: #f9fafb;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--orange);
+  border: 2px solid var(--orange);
+}
+
+.btn-outline:hover {
+  background-color: var(--orange);
+  color: var(--white);
+}
+
+/* 📦 CARTES */
+.card {
+  background-color: var(--medium-gray);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-lg);
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.card-white {
+  background-color: var(--white);
+  color: var(--dark-gray);
+}
+
+/* 🎨 SECTIONS */
+.section-dark {
+  background-color: var(--dark-gray);
+  color: var(--white);
+  padding: 4rem 0;
+}
+
+.section-gray {
+  background-color: var(--medium-gray);
+  color: var(--white);
+  padding: 4rem 0;
+}
+
+.section-white {
+  background-color: var(--white);
+  color: var(--dark-gray);
+  padding: 4rem 0;
+}
+
+/* 📊 STATISTIQUES */
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 1.5rem;
+  background-color: var(--medium-gray);
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow-md);
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--orange);
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  color: var(--white);
+  font-weight: 500;
+}
+
+/* 🏗️ ÉLÉMENTS BTP */
+.construction-hero {
+  background: linear-gradient(135deg, var(--dark-gray) 0%, var(--medium-gray) 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.construction-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.1;
+  z-index: 1;
+}
+
+.construction-hero > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* 🖼️ IMAGES ET ICÔNES */
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--orange);
+}
+
+.icon-large {
+  width: 3rem;
+  height: 3rem;
+  color: var(--orange);
+  margin-bottom: 1rem;
+}
+
+.feature-icon {
+  width: 4rem;
+  height: 4rem;
+  background-color: var(--orange);
+  color: var(--white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.photo-container {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.photo-container img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 🏢 NAVBAR SIMPLIFIÉE */
+.navbar {
+  background-color: var(--dark-gray);
+  padding: 1rem 0;
+  box-shadow: var(--shadow-md);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--orange);
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-link {
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: var(--orange);
+}
+
+/* 📱 RESPONSIVE */
+@media (max-width: 768px) {
+  .heading-1 {
+    font-size: 2rem;
+  }
+  
+  .heading-2 {
+    font-size: 1.75rem;
+  }
+  
+  .stats-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .nav-links {
+    display: none;
+  }
+}
+
+/* 🎯 CLASSES UTILITAIRES */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+/* 🔄 ANIMATIONS */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* 🎨 OVERRIDE FORCÉ DES COULEURS TAILWIND */
+.bg-blue-500,
+.bg-blue-600,
+.bg-indigo-500,
+.bg-purple-500,
+.bg-green-500 {
+  background-color: var(--orange) !important;
+}
+
+.text-blue-500,
+.text-blue-600,
+.text-indigo-500,
+.text-purple-500 {
+  color: var(--orange) !important;
+}
+
+.border-blue-500,
+.border-indigo-500 {
+  border-color: var(--orange) !important;
+}

@@ -1,57 +1,115 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function Cta() {
+const Cta = () => {
   return (
-    <section className="construction-gradient text-white text-center py-12 md:py-20 px-4 sm:px-6 relative overflow-hidden">
-      {/* Overlay pour améliorer le contraste */}
-      <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-      
-      <div className="max-w-4xl mx-auto relative z-10">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 leading-tight">
-          Prêt à démarrer votre projet ?
-        </h2>
-        <p className="mb-8 text-base sm:text-lg md:text-xl max-w-2xl mx-auto text-white font-light">
-          Rejoignez des milliers de professionnels qui font confiance à Finitio
-        </p>
-        
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Link 
-            to="/inscription" 
-            className="btn btn-primary btn-lg px-8 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
-          >
-            <span className="mr-2">🚀</span>
-            Commencer gratuitement
-          </Link>
-          
-          <Link 
-            to="/demo" 
-            className="btn btn-outline btn-lg px-8 py-4 text-lg font-semibold text-white border-white border-2 hover:bg-white hover:text-gray-900 shadow-xl"
-          >
-            <span className="mr-2">🎥</span>
-            Voir la démo
-          </Link>
+    <section className="section-dark">
+      <div className="container text-center">
+        {/* Icône principale */}
+        <div className="feature-icon mx-auto">
+          <i className="fas fa-rocket"></i>
         </div>
         
-        {/* Statistiques de confiance */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto">
-          <div className="stats-card">
-            <div className="stats-number">2500+</div>
-            <div className="stats-label">Projets Réalisés</div>
+        <h2 className="heading-2">
+          Transformez vos projets de construction
+        </h2>
+        
+        <p className="text-xl text-gray mb-8 max-w-3xl mx-auto">
+          Rejoignez plus de 2500 professionnels qui utilisent Finitio pour gérer leurs projets 
+          avec efficacité et livrer des résultats exceptionnels.
+        </p>
+
+        {/* Boutons CTA */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <Link to="/inscription" className="btn btn-orange">
+            <i className="fas fa-user-plus icon"></i>
+            Créer mon compte gratuit
+          </Link>
+          <Link to="/demo" className="btn btn-outline">
+            <i className="fas fa-play icon"></i>
+            Demander une démo
+          </Link>
+        </div>
+
+        {/* Garanties avec icônes */}
+        <div className="grid-3 mb-12">
+          <div className="card text-center">
+            <div className="feature-icon mx-auto">
+              <i className="fas fa-shield-alt"></i>
+            </div>
+            <h3 className="heading-3">100% Sécurisé</h3>
+            <p className="text-gray">
+              Vos données sont protégées par un chiffrement de niveau bancaire
+            </p>
           </div>
-          <div className="stats-card">
-            <div className="stats-number">98.5%</div>
-            <div className="stats-label">Satisfaction Client</div>
+          
+          <div className="card text-center">
+            <div className="feature-icon mx-auto">
+              <i className="fas fa-headset"></i>
+            </div>
+            <h3 className="heading-3">Support 24/7</h3>
+            <p className="text-gray">
+              Notre équipe d'experts vous accompagne à tout moment
+            </p>
           </div>
-          <div className="stats-card">
-            <div className="stats-number">24h</div>
-            <div className="stats-label">Support Réactif</div>
+          
+          <div className="card text-center">
+            <div className="feature-icon mx-auto">
+              <i className="fas fa-money-bill-wave"></i>
+            </div>
+            <h3 className="heading-3">Essai gratuit</h3>
+            <p className="text-gray">
+              Testez toutes les fonctionnalités pendant 30 jours gratuitement
+            </p>
           </div>
+        </div>
+
+        {/* Statistiques finales */}
+        <div className="stats-container">
+          <div className="stat-item">
+            <div className="feature-icon mx-auto mb-2" style={{width: '3rem', height: '3rem', fontSize: '1rem'}}>
+              <i className="fas fa-building"></i>
+            </div>
+            <div className="stat-number">2500+</div>
+            <div className="stat-label">Projets livrés</div>
+          </div>
+          
+          <div className="stat-item">
+            <div className="feature-icon mx-auto mb-2" style={{width: '3rem', height: '3rem', fontSize: '1rem'}}>
+              <i className="fas fa-users"></i>
+            </div>
+            <div className="stat-number">1200+</div>
+            <div className="stat-label">Utilisateurs actifs</div>
+          </div>
+          
+          <div className="stat-item">
+            <div className="feature-icon mx-auto mb-2" style={{width: '3rem', height: '3rem', fontSize: '1rem'}}>
+              <i className="fas fa-star"></i>
+            </div>
+            <div className="stat-number">98.5%</div>
+            <div className="stat-label">Satisfaction client</div>
+          </div>
+          
+          <div className="stat-item">
+            <div className="feature-icon mx-auto mb-2" style={{width: '3rem', height: '3rem', fontSize: '1rem'}}>
+              <i className="fas fa-clock"></i>
+            </div>
+            <div className="stat-number">24h</div>
+            <div className="stat-label">Temps de réponse</div>
+          </div>
+        </div>
+
+        {/* Photo d'équipe finale */}
+        <div className="photo-container max-w-4xl mx-auto mt-12">
+          <img 
+            src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+            alt="Équipe Finitio - Professionnels de la construction"
+            className="w-full h-auto"
+          />
         </div>
       </div>
-      
-      {/* Éléments décoratifs harmonisés */}
-      <div className="absolute top-10 left-10 w-20 h-20 bg-orange-400 bg-opacity-20 rounded-full blur-xl animate-pulse"></div>
-      <div className="absolute bottom-10 right-10 w-32 h-32 bg-orange-500 bg-opacity-15 rounded-full blur-xl animate-pulse delay-1000"></div>
     </section>
   );
-}
+};
+
+export default Cta;

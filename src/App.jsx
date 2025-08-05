@@ -16,6 +16,8 @@ import NotificationContainer from './components/NotificationContainer';
 import './styles/premiumTheme.css';
 // Import de l'harmonisation complète des couleurs
 import './styles/colorHarmonization.css';
+// Import du design system simplifié
+import './styles/simple-design-system.css';
 
 import Dashboard from './pages/Dashboard';
 import DashboardClient from './pages/DashboardClient';
@@ -58,7 +60,6 @@ function AppWithTracking() {
             <Hero />
             <Pourquoi />
             <Fonctionnalites />
-            <Footer />
           </>
         }
       />
@@ -128,8 +129,11 @@ function AppWithTracking() {
 function App() {
   return (
     <Router>
-      <AppWithTracking />
-      <NotificationContainer />
+      <div className="App">
+        <AppWithTracking />
+        <Footer />
+        <NotificationContainer />
+      </div>
     </Router>
   );
 }
