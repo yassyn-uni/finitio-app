@@ -5,7 +5,7 @@ const modules = [
   { 
     title: 'Projets disponibles', 
     icon: '📋', 
-    link: '/projets',
+    link: '/projets-disponibles',
     description: 'Découvrez les projets en recherche de prestataires',
     color: 'from-blue-500 to-indigo-600',
     delay: '0ms'
