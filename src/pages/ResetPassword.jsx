@@ -16,17 +16,48 @@ export default function ResetPassword() {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   useEffect(() => {
+    // Debug: Afficher l'URL complète
+    console.log('URL complète:', window.location.href);
+    console.log('Search params:', window.location.search);
+    console.log('Hash:', window.location.hash);
+    
     // Vérifier si c'est un lien de reset (avec access_token)
     const accessToken = searchParams.get('access_token');
     const refreshToken = searchParams.get('refresh_token');
+    const type = searchParams.get('type');
     
-    if (accessToken && refreshToken) {
+    // Vérifier aussi dans le hash (fragment) car Supabase peut utiliser ça
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const hashAccessToken = hashParams.get('access_token');
+    const hashRefreshToken = hashParams.get('refresh_token');
+    const hashType = hashParams.get('type');
+    
+    console.log('URL Params:', { accessToken, refreshToken, type });
+    console.log('Hash Params:', { hashAccessToken, hashRefreshToken, hashType });
+    
+    // Utiliser les tokens du hash si disponibles, sinon ceux de l'URL
+    const finalAccessToken = accessToken || hashAccessToken;
+    const finalRefreshToken = refreshToken || hashRefreshToken;
+    const finalType = type || hashType;
+    
+    if (finalAccessToken && finalRefreshToken && finalType === 'recovery') {
       setIsResetMode(true);
       // Définir la session avec les tokens
       supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken
+        access_token: finalAccessToken,
+        refresh_token: finalRefreshToken
+      }).then(({ error }) => {
+        if (error) {
+          console.error('Erreur session:', error);
+          setError('Lien de réinitialisation invalide ou expiré');
+        } else {
+          console.log('Session définie avec succès');
+        }
       });
+    } else if (searchParams.get('error') || hashParams.get('error')) {
+      // Gérer les erreurs dans l'URL
+      const errorDesc = searchParams.get('error_description') || hashParams.get('error_description');
+      setError(errorDesc || 'Erreur lors de la réinitialisation');
     }
   }, [searchParams]);
 
