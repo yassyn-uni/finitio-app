@@ -1,6 +1,6 @@
 // ✅ TOUS LES IMPORTS EN PREMIER
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
+import Hero from './components/hero';
 import Pourquoi from './components/Pourquoi';
 import Fonctionnalites from './components/Fonctionnalites';
 import Etapes from './components/Etapes';
