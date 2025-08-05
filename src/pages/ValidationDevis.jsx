@@ -45,7 +45,7 @@ export default function ValidationDevis() {
         {
           id: '1',
           projet_titre: 'Rénovation Appartement Paris',
-          client_nom: 'Marie Dubois',
+          client_nom: 'Aicha Benali',
           prestataire: 'Entreprise Martin',
           montant: 25000,
           statut: 'en_attente',

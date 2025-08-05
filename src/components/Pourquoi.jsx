@@ -122,21 +122,21 @@ export default function Pourquoi() {
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                nom: "Marie Dubois",
+                nom: "Aicha Benali",
                 role: "Cliente",
                 avatar: "client",
                 temoignage: "Finitio a transformé mon expérience de rénovation. Tout est transparent et organisé !",
                 note: 5
               },
               {
-                nom: "Pierre Martin",
+                nom: "Youssef Alami",
                 role: "Prestataire",
                 avatar: "contractor", 
                 temoignage: "Grâce à Finitio, j'ai trouvé de nouveaux clients et optimisé ma gestion de chantier.",
                 note: 5
               },
               {
-                nom: "Sophie Leroy",
+                nom: "Fatima Zahra Tazi",
                 role: "Architecte",
                 avatar: "architect",
                 temoignage: "La coordination d'équipe n'a jamais été aussi simple. Un outil indispensable !",
