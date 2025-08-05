@@ -31,6 +31,7 @@ import Paiements from './pages/Paiements';
 import Devis from './pages/Devis';
 import ListeAchats from './pages/ListeAchats';
 import ValidationDevis from './pages/ValidationDevis';
+import GestionEtapes from './pages/GestionEtapes';
 
 // ✅ FONCTION PRINCIPALE (AVEC TOUTES LES ROUTES)
 function App() {
@@ -71,6 +72,7 @@ function App() {
         <Route path="/devis" element={<Devis />} />
         <Route path="/liste-achats" element={<ListeAchats />} />
         <Route path="/validation-devis" element={<ValidationDevis />} />
+        <Route path="/gestion-etapes" element={<GestionEtapes />} />
 
         {/* Projets */}
         <Route path="/nouveau-projet" element={<NouveauProjet />} />

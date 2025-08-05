@@ -21,7 +21,7 @@ const modules = [
   { 
     title: 'Gestion des étapes', 
     icon: '📋', 
-    link: '/projets',
+    link: '/gestion-etapes',
     description: 'Planifiez et suivez les phases de construction',
     color: 'from-indigo-500 to-purple-600',
     delay: '200ms'
