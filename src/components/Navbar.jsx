@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { FinitioLogo } from '../assets/FinitioAssets';
-import { trackEvent } from '../utils/analytics';
 
 export default function Navbar() {
   const [user, setUser] = useState(null);
@@ -50,23 +49,19 @@ export default function Navbar() {
   };
 
   const handleLogout = async () => {
-    trackEvent('navbar_logout', { user_role: profil?.role });
     await supabase.auth.signOut();
     navigate('/');
   };
 
   const handleNavClick = (navItem) => {
-    trackEvent('navbar_navigation', { nav_item: navItem, current_page: location.pathname });
   };
 
   const handleProfileToggle = () => {
     setShowProfileMenu(!showProfileMenu);
-    trackEvent('navbar_profile_toggle', { action: showProfileMenu ? 'close' : 'open' });
   };
 
   const handleMobileToggle = () => {
     setShowMobileMenu(!showMobileMenu);
-    trackEvent('navbar_mobile_toggle', { action: showMobileMenu ? 'close' : 'open' });
   };
 
   const navLinks = [

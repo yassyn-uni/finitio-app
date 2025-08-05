@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-import { trackEvent, trackSignup, trackConversion } from '../utils/analytics';
+import { FinitioLogo } from '../assets/FinitioAssets';
 import ErrorHandler from '../utils/errorHandler';
 
 export default function Inscription() {
@@ -24,12 +24,12 @@ export default function Inscription() {
     }));
 
     // 📊 Tracker les interactions avec les champs
-    trackEvent('form_field_change', {
-      field: name,
-      value: name === 'role' ? value : 'hidden', // Ne pas tracker les données sensibles
-      page: 'signup',
-      timestamp: new Date().toISOString()
-    });
+    // trackEvent('form_field_change', {
+    //   field: name,
+    //   value: name === 'role' ? value : 'hidden', // Ne pas tracker les données sensibles
+    //   page: 'signup',
+    //   timestamp: new Date().toISOString()
+    // });
   };
 
   const handleSubmit = async (e) => {
@@ -38,11 +38,11 @@ export default function Inscription() {
     setErreur('');
 
     // 📊 Tracker la tentative d'inscription
-    trackEvent('signup_attempt', {
-      role: formData.role,
-      email_domain: formData.email.split('@')[1] || 'unknown',
-      timestamp: new Date().toISOString()
-    });
+    // trackEvent('signup_attempt', {
+    //   role: formData.role,
+    //   email_domain: formData.email.split('@')[1] || 'unknown',
+    //   timestamp: new Date().toISOString()
+    // });
 
     try {
       // Créer le compte utilisateur
@@ -53,12 +53,12 @@ export default function Inscription() {
 
       if (authError) {
         // 🚨 Tracker l'échec d'inscription
-        trackEvent('signup_failed', {
-          error_type: authError.message,
-          role: formData.role,
-          email_domain: formData.email.split('@')[1] || 'unknown',
-          timestamp: new Date().toISOString()
-        });
+        // trackEvent('signup_failed', {
+        //   error_type: authError.message,
+        //   role: formData.role,
+        //   email_domain: formData.email.split('@')[1] || 'unknown',
+        //   timestamp: new Date().toISOString()
+        // });
         throw authError;
       }
 
@@ -77,40 +77,40 @@ export default function Inscription() {
 
         if (profileError) {
           // 🚨 Tracker l'erreur de création de profil
-          trackEvent('profile_creation_failed', {
-            error_type: profileError.message,
-            role: formData.role,
-            user_id: authData.user.id,
-            timestamp: new Date().toISOString()
-          });
+          // trackEvent('profile_creation_failed', {
+          //   error_type: profileError.message,
+          //   role: formData.role,
+          //   user_id: authData.user.id,
+          //   timestamp: new Date().toISOString()
+          // });
           throw profileError;
         }
 
         // ✅ Tracker l'inscription réussie
-        await trackSignup(authData.user.id, {
-          email: formData.email,
-          role: formData.role,
-          nom: formData.nom,
-          signup_method: 'email_password',
-          user_agent: navigator.userAgent,
-          timestamp: new Date().toISOString()
-        });
+        // await trackSignup(authData.user.id, {
+        //   email: formData.email,
+        //   role: formData.role,
+        //   nom: formData.nom,
+        //   signup_method: 'email_password',
+        //   user_agent: navigator.userAgent,
+        //   timestamp: new Date().toISOString()
+        // });
 
         // 🎯 Tracker la conversion (inscription = conversion)
-        await trackConversion(authData.user.id, 'signup', {
-          conversion_value: 1,
-          role: formData.role,
-          source: 'direct',
-          timestamp: new Date().toISOString()
-        });
+        // await trackConversion(authData.user.id, 'signup', {
+        //   conversion_value: 1,
+        //   role: formData.role,
+        //   source: 'direct',
+        //   timestamp: new Date().toISOString()
+        // });
 
         // 📱 Tracker l'événement d'inscription réussie
-        trackEvent('signup_success', {
-          user_role: formData.role,
-          signup_method: 'email_password',
-          email_domain: formData.email.split('@')[1] || 'unknown',
-          timestamp: new Date().toISOString()
-        });
+        // trackEvent('signup_success', {
+        //   user_role: formData.role,
+        //   signup_method: 'email_password',
+        //   email_domain: formData.email.split('@')[1] || 'unknown',
+        //   timestamp: new Date().toISOString()
+        // });
 
         // Stocker le début de session
         localStorage.setItem('session_start', Date.now().toString());
@@ -133,22 +133,22 @@ export default function Inscription() {
 
   // 🔗 Tracker les clics sur les liens
   const handleLinkClick = (linkName, linkPath) => {
-    trackEvent('auth_navigation', {
-      link_name: linkName,
-      link_path: linkPath,
-      page: 'signup',
-      timestamp: new Date().toISOString()
-    });
+    // trackEvent('auth_navigation', {
+    //   link_name: linkName,
+    //   link_path: linkPath,
+    //   page: 'signup',
+    //   timestamp: new Date().toISOString()
+    // });
   };
 
   // 🎯 Tracker la sélection de rôle
   const handleRoleSelect = (role) => {
     setFormData(prev => ({ ...prev, role }));
-    trackEvent('role_selection', {
-      selected_role: role,
-      page: 'signup',
-      timestamp: new Date().toISOString()
-    });
+    // trackEvent('role_selection', {
+    //   selected_role: role,
+    //   page: 'signup',
+    //   timestamp: new Date().toISOString()
+    // });
   };
 
   return (
@@ -185,7 +185,7 @@ export default function Inscription() {
                 placeholder="Votre nom complet"
                 value={formData.nom}
                 onChange={handleChange}
-                onFocus={() => trackEvent('form_field_focus', { field: 'nom', page: 'signup' })}
+                onFocus={() => {}}
               />
             </div>
 
@@ -203,7 +203,7 @@ export default function Inscription() {
                 placeholder="votre@email.com"
                 value={formData.email}
                 onChange={handleChange}
-                onFocus={() => trackEvent('form_field_focus', { field: 'email', page: 'signup' })}
+                onFocus={() => {}}
               />
             </div>
 
@@ -221,7 +221,7 @@ export default function Inscription() {
                 placeholder="Mot de passe sécurisé"
                 value={formData.motDePasse}
                 onChange={handleChange}
-                onFocus={() => trackEvent('form_field_focus', { field: 'password', page: 'signup' })}
+                onFocus={() => {}}
               />
             </div>
 
@@ -277,10 +277,7 @@ export default function Inscription() {
               type="submit"
               disabled={loading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
-              onClick={() => trackEvent('signup_button_click', { 
-                role: formData.role,
-                timestamp: new Date().toISOString() 
-              })}
+              onClick={() => {}}
             >
               {loading ? 'Création du compte...' : 'Créer mon compte'}
             </button>

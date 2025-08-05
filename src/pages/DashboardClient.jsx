@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import usePageTracking from '../hooks/usePageTracking';
-import { trackEvent, trackCTAClick } from '../utils/analytics';
 
 export default function DashboardClient() {
   const [user, setUser] = useState(null);
@@ -19,23 +18,23 @@ export default function DashboardClient() {
 
   // 🎯 Tracker les clics sur les modules
   const handleModuleClick = (moduleName, modulePath) => {
-    trackCTAClick(moduleName, 'dashboard_client');
-    trackEvent('dashboard_module_click', {
-      module_name: moduleName,
-      module_path: modulePath,
-      user_role: 'client',
-      timestamp: new Date().toISOString()
-    });
+    // trackCTAClick(moduleName, 'dashboard_client');
+    // trackEvent('dashboard_module_click', {
+    //   module_name: moduleName,
+    //   module_path: modulePath,
+    //   user_role: 'client',
+    //   timestamp: new Date().toISOString()
+    // });
   };
 
   // 📈 Tracker les interactions avec les statistiques
   const handleStatClick = (statName, statValue) => {
-    trackEvent('dashboard_stat_interaction', {
-      stat_name: statName,
-      stat_value: statValue,
-      user_role: 'client',
-      timestamp: new Date().toISOString()
-    });
+    // trackEvent('dashboard_stat_interaction', {
+    //   stat_name: statName,
+    //   stat_value: statValue,
+    //   user_role: 'client',
+    //   timestamp: new Date().toISOString()
+    // });
   };
 
   useEffect(() => {
@@ -69,11 +68,11 @@ export default function DashboardClient() {
       setLoading(false);
 
       // 📊 Tracker le chargement du dashboard
-      trackEvent('dashboard_loaded', {
-        user_role: 'client',
-        projects_count: projetsData?.length || 0,
-        timestamp: new Date().toISOString()
-      });
+      // trackEvent('dashboard_loaded', {
+      //   user_role: 'client',
+      //   projects_count: projetsData?.length || 0,
+      //   timestamp: new Date().toISOString()
+      // });
     };
 
     getUser();

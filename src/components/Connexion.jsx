@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-import { trackEvent, trackLogin } from '../utils/analytics';
 import ErrorHandler from '../utils/errorHandler';
 
 export default function Connexion() {
@@ -16,12 +15,6 @@ export default function Connexion() {
     setLoading(true);
     setErreur('');
 
-    // 📊 Tracker la tentative de connexion
-    trackEvent('login_attempt', {
-      email_domain: email.split('@')[1] || 'unknown',
-      timestamp: new Date().toISOString()
-    });
-
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -29,46 +22,15 @@ export default function Connexion() {
       });
 
       if (error) {
-        // 🚨 Tracker l'échec de connexion
-        trackEvent('login_failed', {
-          error_type: error.message,
-          email_domain: email.split('@')[1] || 'unknown',
-          timestamp: new Date().toISOString()
-        });
         throw error;
       }
 
       if (data.user) {
-        // 🎯 Récupérer le profil utilisateur pour le tracking
-        const { data: userProfile } = await supabase
-          .from('users')
-          .select('*')
-          .eq('id', data.user.id)
-          .single();
-
-        // ✅ Tracker la connexion réussie
-        await trackLogin(data.user.id, {
-          email: data.user.email,
-          role: userProfile?.role || 'unknown',
-          nom: userProfile?.nom || 'Unknown User',
-          login_method: 'email_password',
-          user_agent: navigator.userAgent,
-          timestamp: new Date().toISOString()
-        });
-
-        // 📱 Tracker l'événement de connexion réussie
-        trackEvent('login_success', {
-          user_role: userProfile?.role || 'unknown',
-          login_method: 'email_password',
-          email_domain: email.split('@')[1] || 'unknown',
-          timestamp: new Date().toISOString()
-        });
-
         // Stocker le début de session pour calculer la durée
         localStorage.setItem('session_start', Date.now().toString());
 
         // Redirection selon le rôle
-        const dashboardPath = userProfile?.role ? `/dashboard-${userProfile.role}` : '/dashboard';
+        const dashboardPath = '/dashboard';
         navigate(dashboardPath);
       }
     } catch (error) {
@@ -78,16 +40,6 @@ export default function Connexion() {
     } finally {
       setLoading(false);
     }
-  };
-
-  // 🔗 Tracker les clics sur les liens
-  const handleLinkClick = (linkName, linkPath) => {
-    trackEvent('auth_navigation', {
-      link_name: linkName,
-      link_path: linkPath,
-      page: 'login',
-      timestamp: new Date().toISOString()
-    });
   };
 
   return (
@@ -111,7 +63,6 @@ export default function Connexion() {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1e3a8a]"
               required
-              onFocus={() => trackEvent('form_field_focus', { field: 'email', page: 'login' })}
             />
           </div>
 
@@ -124,13 +75,11 @@ export default function Connexion() {
               onChange={(e) => setMotDePasse(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1e3a8a]"
               required
-              onFocus={() => trackEvent('form_field_focus', { field: 'password', page: 'login' })}
             />
             <div className="mt-2 text-right">
               <Link 
                 to="/reset-password" 
                 className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
-                onClick={() => handleLinkClick('Mot de passe oublié', '/reset-password')}
               >
                 Mot de passe oublié ?
               </Link>
@@ -141,7 +90,6 @@ export default function Connexion() {
             type="submit"
             disabled={loading}
             className="w-full bg-[#10b981] text-white py-2 rounded-lg hover:bg-[#059669] transition duration-300"
-            onClick={() => trackEvent('login_button_click', { timestamp: new Date().toISOString() })}
           >
             {loading ? 'Connexion...' : 'Se connecter'}
           </button>
