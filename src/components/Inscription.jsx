@@ -209,12 +209,11 @@ export default function Inscription() {
         // Stocker le début de session
         localStorage.setItem('session_start', Date.now().toString());
 
-        // Message de succès et redirection
-        alert('🎉 Inscription réussie ! Vérifiez votre email pour confirmer votre compte.');
+        // Message de succès et redirection vers l'accueil
+        alert('🎉 Inscription réussie ! Bienvenue sur Finitio. Vérifiez votre email pour confirmer votre compte.');
         
-        // Redirection vers le dashboard approprié
-        const dashboardPath = `/dashboard-${formData.role}`;
-        navigate(dashboardPath);
+        // Redirection vers l'accueil
+        navigate('/');
       }
     } catch (error) {
       ErrorHandler.log(error, 'Inscription');

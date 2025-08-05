@@ -15,6 +15,9 @@ export default function Devis() {
   useEffect(() => {
     if (currentUser) {
       fetchDevis();
+    } else if (currentUser === null && !loading) {
+      // Si pas d'utilisateur connecté, arrêter le chargement
+      setLoading(false);
     }
   }, [currentUser, filter]);
 
@@ -28,9 +31,15 @@ export default function Devis() {
           .eq('id', user.id)
           .single();
         setCurrentUser(userData);
+      } else {
+        // Pas d'utilisateur connecté
+        setCurrentUser(null);
+        setLoading(false);
       }
     } catch (error) {
       console.error('Erreur récupération utilisateur:', error);
+      setCurrentUser(null);
+      setLoading(false);
     }
   };
 
