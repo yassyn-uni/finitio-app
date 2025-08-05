@@ -34,7 +34,7 @@ export default function ListeProjets() {
           <h3 className="font-bold text-lg">{projet.titre}</h3>
           <p>{projet.description}</p>
           <div className="mt-2 flex gap-2">
-            <button onClick={() => navigate(`/projet/${projet.id}`)} className="text-blue-600 underline">Voir</button>
+            <button onClick={() => navigate(`/projets/${projet.id}`)} className="text-blue-600 underline">Voir</button>
             <button onClick={() => handleDelete(projet.id)} className="text-red-500">Supprimer</button>
           </div>
         </div>
