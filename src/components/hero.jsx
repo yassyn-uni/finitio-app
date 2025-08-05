@@ -70,7 +70,7 @@ export default function Hero() {
                 />
               </div>
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-                <span className="block">Construisez</span>
+                <span className="block">Construisons</span>
                 <span className="block bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
                   l'avenir
                 </span>
