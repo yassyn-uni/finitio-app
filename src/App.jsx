@@ -76,6 +76,13 @@ function App() {
         <Route path="/projets/:id/kanban" element={<EtapesKanban />} />
         <Route path="/projets/:id/ajouter-devis" element={<AjouterDevis />} />
         
+        {/* Redirection pour ancienne route /projet/ */}
+        <Route path="/projet/:id" element={<DetailProjet />} />
+        <Route path="/projet/:id/ajouter-etape" element={<AjouterEtape />} />
+        <Route path="/projet/:id/etapes" element={<EtapesProjet />} />
+        <Route path="/projet/:id/kanban" element={<EtapesKanban />} />
+        <Route path="/projet/:id/ajouter-devis" element={<AjouterDevis />} />
+        
         {/* Routes devis */}
         <Route path="/projets/:id/ajouter-devis" element={<AjouterDevis />} />
         <Route path="/devis/nouveau" element={<AjouterDevis />} />
