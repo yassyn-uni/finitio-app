@@ -12,8 +12,8 @@ import { supabase } from './supabaseClient';
 // SUPPRIMÉ: import './utils/analytics'; - Causait les erreurs 400
 import NotificationContainer from './components/NotificationContainer';
 
-// Import du thème Materio
-import './styles/materioTheme.css';
+// Import du nouveau thème premium
+import './styles/premiumTheme.css';
 
 import Dashboard from './pages/Dashboard';
 import DashboardClient from './pages/DashboardClient';
