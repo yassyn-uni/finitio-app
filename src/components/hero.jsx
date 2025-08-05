@@ -34,183 +34,153 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Fond premium avec gradient animé */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-700 to-indigo-800 animate-gradient-shift"></div>
+      {/* Fond moderne avec gradient dynamique */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+      </div>
       
-      {/* Particules animées en arrière-plan */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
-        <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-indigo-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float" style={{ animationDelay: '4s' }}></div>
-      </div>
-
-      {/* Motif géométrique subtil */}
+      {/* Grille moderne en arrière-plan */}
       <div className="absolute inset-0 opacity-10">
-        <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <defs>
-            <pattern id="heroPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-              <polygon points="10,0 20,10 10,20 0,10" fill="white" opacity="0.1" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#heroPattern)" />
-        </svg>
+        <div className="absolute inset-0" style={{
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px'
+        }}></div>
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-20">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Contenu textuel */}
-          <div className="text-center lg:text-left animate-fade-in-up">
-            {/* Logo et titre */}
-            <div className="mb-8">
-              <div className="flex items-center justify-center lg:justify-start mb-6">
-                <FinitioLogo 
-                  variant="main" 
-                  size="xl" 
-                  className="filter brightness-0 invert animate-pulse-soft" 
-                />
-              </div>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-                <span className="block">Construisons</span>
-                <span className="block bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
-                  l'avenir
-                </span>
-                <span className="block">ensemble</span>
-              </h1>
-            </div>
+      {/* Éléments flottants modernes */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-2xl opacity-20 animate-pulse blur-sm transform rotate-12"></div>
+        <div className="absolute top-40 right-32 w-24 h-24 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full opacity-30 animate-bounce blur-sm"></div>
+        <div className="absolute bottom-32 left-32 w-40 h-40 bg-gradient-to-br from-indigo-400 to-blue-400 rounded-3xl opacity-15 animate-pulse blur-sm transform -rotate-12"></div>
+        <div className="absolute bottom-20 right-20 w-28 h-28 bg-gradient-to-br from-cyan-400 to-teal-400 rounded-2xl opacity-25 animate-bounce blur-sm transform rotate-45"></div>
+      </div>
 
-            {/* Description */}
-            <p className="text-xl md:text-2xl text-blue-100 mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-              La plateforme BTP nouvelle génération qui connecte 
-              <span className="text-yellow-400 font-semibold"> clients</span>, 
-              <span className="text-orange-400 font-semibold"> prestataires</span> et 
-              <span className="text-green-400 font-semibold"> architectes</span> 
-              pour des projets de construction réussis.
+      {/* Contenu principal */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="space-y-12">
+          
+          {/* Logo avec effet glassmorphism */}
+          <div className="flex justify-center mb-8">
+            <div className="p-6 rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl">
+              <FinitioLogo 
+                variant="main" 
+                size="xl" 
+                className="filter brightness-0 invert animate-pulse-soft" 
+              />
+            </div>
+          </div>
+
+          {/* Titre principal avec effet moderne */}
+          <div className="space-y-6">
+            <h1 className="text-6xl md:text-7xl lg:text-8xl font-black text-white leading-tight">
+              <span className="block bg-gradient-to-r from-white via-blue-100 to-cyan-100 bg-clip-text text-transparent">
+                Construisons
+              </span>
+              <span className="block bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text text-transparent animate-gradient-x">
+                l'avenir
+              </span>
+              <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                ensemble
+              </span>
+            </h1>
+            
+            <p className="text-xl md:text-2xl text-blue-100 max-w-4xl mx-auto leading-relaxed font-light">
+              La plateforme révolutionnaire qui connecte <span className="font-semibold text-yellow-300">clients</span>, 
+              <span className="font-semibold text-green-300"> prestataires</span> et 
+              <span className="font-semibold text-purple-300"> architectes</span> pour des projets de construction exceptionnels
             </p>
+          </div>
 
-            {/* Statistiques impressionnantes */}
-            <div className="grid grid-cols-3 gap-6 mb-10 animate-slide-in-right" style={{ animationDelay: '0.3s' }}>
-              <div 
-                className="text-center cursor-pointer hover:scale-105 transition-transform duration-300"
-                onClick={() => handleStatClick('projets_realises', '500+')}
-              >
-                <div className="text-3xl md:text-4xl font-bold text-white mb-2">500+</div>
-                <div className="text-blue-200 text-sm">Projets réalisés</div>
-              </div>
-              <div 
-                className="text-center cursor-pointer hover:scale-105 transition-transform duration-300"
-                onClick={() => handleStatClick('satisfaction_client', '98%')}
-              >
-                <div className="text-3xl md:text-4xl font-bold text-white mb-2">98%</div>
-                <div className="text-blue-200 text-sm">Satisfaction client</div>
-              </div>
-              <div 
-                className="text-center cursor-pointer hover:scale-105 transition-transform duration-300"
-                onClick={() => handleStatClick('temps_reponse', '24h')}
-              >
-                <div className="text-3xl md:text-4xl font-bold text-white mb-2">24h</div>
-                <div className="text-blue-200 text-sm">Temps de réponse</div>
-              </div>
+          {/* CTA Buttons avec design moderne */}
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center pt-8">
+            <Link 
+              to="/inscription" 
+              onClick={handleInscriptionClick}
+              className="group relative px-12 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold text-lg rounded-2xl shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-blue-500/25 hover:shadow-2xl"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-700 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <span className="relative flex items-center gap-3">
+                🚀 Commencer gratuitement
+                <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </span>
+            </Link>
+            
+            <Link 
+              to="/connexion" 
+              onClick={handleConnexionClick}
+              className="group px-12 py-4 bg-white/10 backdrop-blur-xl text-white font-bold text-lg rounded-2xl border-2 border-white/30 shadow-xl transform transition-all duration-300 hover:scale-105 hover:bg-white/20 hover:border-white/50"
+            >
+              <span className="flex items-center gap-3">
+                🔐 Se connecter
+                <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                </svg>
+              </span>
+            </Link>
+          </div>
+
+          {/* Statistiques modernes */}
+          <div className="pt-16">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+              {[
+                { number: "10K+", label: "Projets réalisés", icon: "🏗️" },
+                { number: "5K+", label: "Professionnels actifs", icon: "👥" },
+                { number: "98%", label: "Satisfaction client", icon: "⭐" }
+              ].map((stat, index) => (
+                <div 
+                  key={index}
+                  onClick={() => handleStatClick(stat.label, stat.number)}
+                  className="group cursor-pointer p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-xl transform transition-all duration-300 hover:scale-105 hover:bg-white/10 hover:border-white/20"
+                >
+                  <div className="text-4xl mb-4">{stat.icon}</div>
+                  <div className="text-4xl md:text-5xl font-black text-white mb-2 group-hover:text-yellow-300 transition-colors">
+                    {stat.number}
+                  </div>
+                  <div className="text-blue-200 font-medium text-lg">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
             </div>
+          </div>
 
-            {/* Boutons d'action premium */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
-              <Link 
-                to="/inscription" 
-                className="btn-premium group"
-                onClick={handleInscriptionClick}
-              >
-                <span className="flex items-center justify-center gap-3">
-                  <svg className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                  Commencer gratuitement
-                </span>
-              </Link>
-              
-              <Link 
-                to="/connexion" 
-                className="px-8 py-4 rounded-2xl font-semibold text-white border-2 border-white/30 hover:border-white/60 transition-all duration-300 transform hover:scale-105 backdrop-blur-sm hover:bg-white/10"
-                onClick={handleConnexionClick}
-              >
-                <span className="flex items-center justify-center gap-3">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                  </svg>
-                  Se connecter
-                </span>
-              </Link>
+          {/* Badges de confiance modernes */}
+          <div className="pt-12">
+            <p className="text-blue-200 text-sm font-medium mb-6">Ils nous font confiance</p>
+            <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
+              {["🏆 Prix Innovation 2024", "🔒 Sécurisé SSL", "⚡ Support 24/7", "🌍 +50 villes"].map((badge, index) => (
+                <div 
+                  key={index}
+                  className="px-6 py-3 bg-white/5 backdrop-blur-xl rounded-full border border-white/10 text-white text-sm font-medium transform transition-all duration-300 hover:scale-105 hover:bg-white/10"
+                >
+                  {badge}
+                </div>
+              ))}
             </div>
+          </div>
 
-            {/* Badges de confiance */}
-            <div className="flex flex-wrap justify-center lg:justify-start gap-4 mt-10 animate-fade-in-up" style={{ animationDelay: '0.9s' }}>
-              <div 
-                className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full cursor-pointer hover:bg-white/20 transition-colors duration-300"
-                onClick={() => trackEvent('hero_badge_click', { badge_type: 'securise' })}
-              >
-                <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+          {/* Flèche de défilement moderne */}
+          <div className="pt-16">
+            <div className="flex justify-center">
+              <div className="animate-bounce cursor-pointer p-4 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 transition-all duration-300">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
-                <span className="text-white text-sm font-medium">Sécurisé</span>
-              </div>
-              <div 
-                className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full cursor-pointer hover:bg-white/20 transition-colors duration-300"
-                onClick={() => trackEvent('hero_badge_click', { badge_type: 'certifie' })}
-              >
-                <svg className="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span className="text-white text-sm font-medium">Certifié</span>
-              </div>
-              <div 
-                className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full cursor-pointer hover:bg-white/20 transition-colors duration-300"
-                onClick={() => trackEvent('hero_badge_click', { badge_type: '5_etoiles' })}
-              >
-                <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                <span className="text-white text-sm font-medium">5 étoiles</span>
               </div>
             </div>
           </div>
 
-          {/* Illustration premium */}
-          <div className="relative animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-            <div className="relative">
-              {/* Illustration principale */}
-              <div 
-                className="relative z-10 transform hover:scale-105 transition-transform duration-500 cursor-pointer"
-                onClick={() => trackEvent('hero_illustration_click', { illustration_type: 'construction' })}
-              >
-                <FinitioIllustration 
-                  type="construction" 
-                  size="xl" 
-                  className="w-full max-w-lg mx-auto filter drop-shadow-2xl" 
-                />
-              </div>
-              
-              {/* Éléments décoratifs flottants */}
-              <div className="absolute -top-10 -right-10 w-20 h-20 bg-yellow-400 rounded-full opacity-80 animate-float" style={{ animationDelay: '1s' }}></div>
-              <div className="absolute -bottom-10 -left-10 w-16 h-16 bg-green-400 rounded-full opacity-80 animate-float" style={{ animationDelay: '2s' }}></div>
-              <div className="absolute top-1/2 -right-5 w-12 h-12 bg-orange-400 rounded-full opacity-80 animate-float" style={{ animationDelay: '3s' }}></div>
-              
-              {/* Cercles décoratifs */}
-              <div className="absolute inset-0 -z-10">
-                <div className="absolute top-1/4 left-1/4 w-64 h-64 border-2 border-white/20 rounded-full animate-rotate-slow"></div>
-                <div className="absolute bottom-1/4 right-1/4 w-48 h-48 border-2 border-white/10 rounded-full animate-rotate-slow" style={{ animationDirection: 'reverse' }}></div>
-              </div>
-            </div>
-          </div>
         </div>
+      </div>
 
-        {/* Flèche de défilement */}
-        <div 
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce cursor-pointer"
-          onClick={() => trackEvent('hero_scroll_arrow_click', { action: 'scroll_down' })}
-        >
-          <svg className="w-6 h-6 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
-        </div>
+      {/* Illustration moderne en arrière-plan */}
+      <div className="absolute bottom-0 right-0 opacity-20 pointer-events-none">
+        <FinitioIllustration variant="construction" size="lg" className="transform scale-150" />
       </div>
     </section>
   );
