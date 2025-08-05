@@ -1,4 +1,5 @@
 // ✅ TOUS LES IMPORTS EN PREMIER
+import React, { useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/hero';
 import Pourquoi from './components/Pourquoi';
@@ -9,7 +10,6 @@ import Inscription from './components/Inscription';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { supabase } from './supabaseClient';
 import './utils/analytics';
-import { UserProvider } from './contexts/UserContext';
 import { NotificationContainer } from './components/NotificationContainer';
 import OptimizedAnalytics from './utils/optimizedAnalytics';
 import usePageTracking from './hooks/usePageTracking';
@@ -128,10 +128,8 @@ function AppWithTracking() {
 function App() {
   return (
     <Router>
-      <UserProvider>
-        <AppWithTracking />
-        <NotificationContainer />
-      </UserProvider>
+      <AppWithTracking />
+      <NotificationContainer />
     </Router>
   );
 }
