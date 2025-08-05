@@ -2,7 +2,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-import { trackSignup, trackEvent, trackConversion } from '../utils/analytics';
+import { trackEvent, trackSignup, trackConversion } from '../utils/analytics';
+import ErrorHandler from '../utils/errorHandler';
 
 export default function Inscription() {
   const [formData, setFormData] = useState({
@@ -122,7 +123,8 @@ export default function Inscription() {
         navigate(dashboardPath);
       }
     } catch (error) {
-      console.error('Erreur d\'inscription:', error);
+      ErrorHandler.log(error, 'Inscription');
+      ErrorHandler.showUserError('Erreur lors de l\'inscription. Veuillez réessayer.');
       setErreur(error.message);
     } finally {
       setLoading(false);

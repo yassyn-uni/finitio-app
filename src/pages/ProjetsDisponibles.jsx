@@ -1,151 +1,204 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../supabaseClient';
+import ErrorHandler from '../utils/errorHandler';
+import NotificationSystem from '../utils/notifications';
 
 export default function ProjetsDisponibles() {
   const [filtreType, setFiltreType] = useState('tous');
   const [filtreLocalisation, setFiltreLocalisation] = useState('tous');
   const [filtreBudget, setFiltreBudget] = useState('tous');
+  const [projets, setProjets] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
 
-  // Données simulées pour les projets disponibles
-  const projetsDisponibles = [
-    {
-      id: 1,
-      nom: "Villa Contemporaine",
-      type: "construction",
-      localisation: "Lyon",
-      budget: 450000,
-      surface: 180,
-      description: "Construction d'une villa moderne avec piscine et jardin paysager",
-      client: "Famille Dubois",
-      datePublication: "2024-01-15",
-      dateEcheance: "2024-06-30",
-      statut: "ouvert",
-      specialites: ["Maçonnerie", "Électricité", "Plomberie", "Menuiserie"],
-      urgence: "normale",
-      candidatures: 8
-    },
-    {
-      id: 2,
-      nom: "Rénovation Appartement Haussmannien",
-      type: "renovation",
-      localisation: "Paris",
-      budget: 120000,
-      surface: 95,
-      description: "Rénovation complète d'un appartement du 19ème siècle avec conservation des éléments d'époque",
-      client: "M. et Mme Martin",
-      datePublication: "2024-01-20",
-      dateEcheance: "2024-05-15",
-      statut: "ouvert",
-      specialites: ["Plâtrerie", "Parquet", "Électricité", "Peinture"],
-      urgence: "haute",
-      candidatures: 12
-    },
-    {
-      id: 3,
-      nom: "Extension Maison Familiale",
-      type: "extension",
-      localisation: "Bordeaux",
-      budget: 85000,
-      surface: 45,
-      description: "Extension d'une maison avec création d'une suite parentale et bureau",
-      client: "Famille Leroy",
-      datePublication: "2024-01-25",
-      dateEcheance: "2024-07-20",
-      statut: "ouvert",
-      specialites: ["Maçonnerie", "Charpente", "Couverture", "Isolation"],
-      urgence: "normale",
-      candidatures: 5
-    },
-    {
-      id: 4,
-      nom: "Loft Industriel",
-      type: "amenagement",
-      localisation: "Marseille",
-      budget: 200000,
-      surface: 220,
-      description: "Aménagement d'un ancien entrepôt en loft moderne avec mezzanine",
-      client: "Studio Architecture",
-      datePublication: "2024-02-01",
-      dateEcheance: "2024-08-31",
-      statut: "ouvert",
-      specialites: ["Métallerie", "Verrière", "Électricité", "Climatisation"],
-      urgence: "normale",
-      candidatures: 15
-    },
-    {
-      id: 5,
-      nom: "Maison Écologique",
-      type: "construction",
-      localisation: "Nantes",
-      budget: 320000,
-      surface: 140,
-      description: "Construction d'une maison passive avec matériaux écologiques et énergies renouvelables",
-      client: "Éco-Habitat",
-      datePublication: "2024-02-05",
-      dateEcheance: "2024-09-15",
-      statut: "urgent",
-      specialites: ["Ossature bois", "Isolation écologique", "Photovoltaïque", "Géothermie"],
-      urgence: "haute",
-      candidatures: 3
+  // Charger les données au montage
+  useEffect(() => {
+    loadUserAndProjects();
+  }, []);
+
+  const loadUserAndProjects = async () => {
+    try {
+      // Récupérer l'utilisateur connecté
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError) throw userError;
+
+      if (!user) {
+        ErrorHandler.showUserError('Vous devez être connecté pour accéder à cette page');
+        return;
+      }
+
+      // Récupérer le profil utilisateur
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      if (profileError) throw profileError;
+      setCurrentUser(profile);
+
+      // Vérifier que l'utilisateur est un prestataire
+      if (profile.role !== 'prestataire') {
+        ErrorHandler.showUserError('Cette page est réservée aux prestataires');
+        return;
+      }
+
+      // Charger les projets disponibles
+      await loadAvailableProjects();
+
+    } catch (error) {
+      ErrorHandler.log(error, 'ProjetsDisponibles.loadUserAndProjects');
+      ErrorHandler.showUserError('Erreur lors du chargement des données');
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
-  const localisations = [...new Set(projetsDisponibles.map(projet => projet.localisation))];
+  const loadAvailableProjects = async () => {
+    try {
+      // Récupérer les projets ouverts (sans prestataire assigné ou acceptant plusieurs candidatures)
+      const { data: projetsData, error: projetsError } = await supabase
+        .from('projets')
+        .select(`
+          *,
+          profiles:client_id (
+            prenom,
+            nom,
+            avatar_url
+          ),
+          devis (
+            id,
+            statut
+          )
+        `)
+        .eq('statut', 'ouvert')
+        .order('created_at', { ascending: false });
 
-  const projetsFiltres = projetsDisponibles.filter(projet => {
-    const filtreTypeOk = filtreType === 'tous' || projet.type === filtreType;
-    const filtreLocalisationOk = filtreLocalisation === 'tous' || projet.localisation === filtreLocalisation;
-    const filtreBudgetOk = filtreBudget === 'tous' || 
-      (filtreBudget === 'petit' && projet.budget < 100000) ||
-      (filtreBudget === 'moyen' && projet.budget >= 100000 && projet.budget < 300000) ||
-      (filtreBudget === 'grand' && projet.budget >= 300000);
-    return filtreTypeOk && filtreLocalisationOk && filtreBudgetOk;
+      if (projetsError) throw projetsError;
+
+      // Transformer les données pour correspondre au format attendu
+      const projetsFormatted = projetsData?.map(projet => {
+        const devisCount = projet.devis?.length || 0;
+        const budgetRange = getBudgetRange(projet.budget);
+        
+        return {
+          id: projet.id,
+          titre: projet.titre,
+          type: projet.type || 'Construction',
+          localisation: projet.localisation,
+          budget: projet.budget,
+          budgetRange,
+          description: projet.description,
+          client: {
+            nom: `${projet.profiles?.prenom || ''} ${projet.profiles?.nom || ''}`.trim() || 'Client anonyme',
+            avatar: projet.profiles?.avatar_url
+          },
+          dateCreation: projet.created_at,
+          dateDebut: projet.date_debut,
+          dateFin: projet.date_fin,
+          specialites: projet.specialites_requises || [],
+          candidatures: devisCount,
+          statut: projet.statut,
+          urgence: projet.urgence || 'normale',
+          surface: projet.surface,
+          etages: projet.etages
+        };
+      }) || [];
+
+      setProjets(projetsFormatted);
+
+    } catch (error) {
+      ErrorHandler.log(error, 'ProjetsDisponibles.loadAvailableProjects');
+      ErrorHandler.showUserError('Erreur lors du chargement des projets');
+    }
+  };
+
+  const getBudgetRange = (budget) => {
+    if (!budget) return 'non-specifie';
+    if (budget < 50000) return 'petit';
+    if (budget < 200000) return 'moyen';
+    return 'grand';
+  };
+
+  // Fonction pour postuler à un projet
+  const postulerProjet = async (projetId) => {
+    try {
+      if (!currentUser) {
+        ErrorHandler.showUserError('Vous devez être connecté pour postuler');
+        return;
+      }
+
+      // Vérifier si l'utilisateur a déjà postulé
+      const { data: existingDevis, error: checkError } = await supabase
+        .from('devis')
+        .select('id')
+        .eq('projet_id', projetId)
+        .eq('prestataire_id', currentUser.id)
+        .single();
+
+      if (checkError && checkError.code !== 'PGRST116') {
+        throw checkError;
+      }
+
+      if (existingDevis) {
+        ErrorHandler.showUserWarning('Vous avez déjà postulé à ce projet');
+        return;
+      }
+
+      // Créer un devis de candidature
+      const { error: devisError } = await supabase
+        .from('devis')
+        .insert({
+          projet_id: projetId,
+          prestataire_id: currentUser.id,
+          statut: 'en_attente',
+          titre: 'Candidature pour le projet',
+          description: 'Candidature soumise via la page projets disponibles',
+          montant: 0, // À définir plus tard
+          created_at: new Date().toISOString()
+        });
+
+      if (devisError) throw devisError;
+
+      NotificationSystem.success('Candidature envoyée avec succès !');
+      
+      // Recharger les projets pour mettre à jour le compteur
+      await loadAvailableProjects();
+
+    } catch (error) {
+      ErrorHandler.log(error, 'ProjetsDisponibles.postulerProjet');
+      ErrorHandler.showUserError('Erreur lors de l\'envoi de la candidature');
+    }
+  };
+
+  // Filtrer les projets
+  const projetsFiltres = projets.filter(projet => {
+    const matchType = filtreType === 'tous' || projet.type.toLowerCase() === filtreType.toLowerCase();
+    const matchLocalisation = filtreLocalisation === 'tous' || 
+      projet.localisation.toLowerCase().includes(filtreLocalisation.toLowerCase());
+    const matchBudget = filtreBudget === 'tous' || projet.budgetRange === filtreBudget;
+    
+    return matchType && matchLocalisation && matchBudget;
   });
 
-  const getTypeColor = (type) => {
-    switch (type) {
-      case 'construction': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'renovation': return 'bg-green-100 text-green-800 border-green-200';
-      case 'extension': return 'bg-orange-100 text-orange-800 border-orange-200';
-      case 'amenagement': return 'bg-purple-100 text-purple-800 border-purple-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  };
-
-  const getTypeIcon = (type) => {
-    switch (type) {
-      case 'construction': return '🏗️';
-      case 'renovation': return '🔨';
-      case 'extension': return '📐';
-      case 'amenagement': return '🎨';
-      default: return '🏠';
-    }
-  };
-
-  const getUrgenceColor = (urgence) => {
-    switch (urgence) {
-      case 'haute': return 'bg-red-100 text-red-800 border-red-200';
-      case 'normale': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  };
-
-  const getStatutColor = (statut) => {
-    switch (statut) {
-      case 'ouvert': return 'bg-green-100 text-green-800 border-green-200';
-      case 'urgent': return 'bg-red-100 text-red-800 border-red-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  };
-
-  // Statistiques
+  // Calculer les statistiques
   const stats = {
-    total: projetsDisponibles.length,
-    construction: projetsDisponibles.filter(p => p.type === 'construction').length,
-    renovation: projetsDisponibles.filter(p => p.type === 'renovation').length,
-    extension: projetsDisponibles.filter(p => p.type === 'extension').length,
-    amenagement: projetsDisponibles.filter(p => p.type === 'amenagement').length
+    construction: projets.filter(p => p.type === 'Construction').length,
+    renovation: projets.filter(p => p.type === 'Rénovation').length,
+    extension: projets.filter(p => p.type === 'Extension').length,
+    amenagement: projets.filter(p => p.type === 'Aménagement').length
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-red-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Chargement des projets disponibles...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
@@ -234,8 +287,8 @@ export default function ProjetsDisponibles() {
                 className="input-modern w-full"
               >
                 <option value="tous">Toutes les villes</option>
-                {localisations.map(ville => (
-                  <option key={ville} value={ville}>{ville}</option>
+                {projets.map(projet => (
+                  <option key={projet.id} value={projet.localisation}>{projet.localisation}</option>
                 ))}
               </select>
             </div>
@@ -268,8 +321,8 @@ export default function ProjetsDisponibles() {
                 <div className="flex items-center gap-3">
                   <span className="text-3xl">{getTypeIcon(projet.type)}</span>
                   <div>
-                    <h3 className="text-xl font-bold text-gray-800">{projet.nom}</h3>
-                    <p className="text-gray-600">{projet.client}</p>
+                    <h3 className="text-xl font-bold text-gray-800">{projet.titre}</h3>
+                    <p className="text-gray-600">{projet.client.nom}</p>
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -327,7 +380,7 @@ export default function ProjetsDisponibles() {
                 <div>
                   <p className="text-sm text-gray-600">📅 Échéance</p>
                   <p className="font-medium text-gray-800">
-                    {new Date(projet.dateEcheance).toLocaleDateString()}
+                    {new Date(projet.dateFin).toLocaleDateString()}
                   </p>
                 </div>
                 <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getUrgenceColor(projet.urgence)}`}>
@@ -337,7 +390,10 @@ export default function ProjetsDisponibles() {
 
               {/* Actions */}
               <div className="flex gap-3">
-                <button className="btn-primary flex-1">
+                <button 
+                  onClick={() => postulerProjet(projet.id)} 
+                  className="btn-primary flex-1"
+                >
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
@@ -384,3 +440,39 @@ export default function ProjetsDisponibles() {
     </div>
   );
 }
+
+const getTypeIcon = (type) => {
+  switch (type) {
+    case 'construction': return '🏗️';
+    case 'renovation': return '🔨';
+    case 'extension': return '📐';
+    case 'amenagement': return '🎨';
+    default: return '🏠';
+  }
+};
+
+const getTypeColor = (type) => {
+  switch (type) {
+    case 'construction': return 'bg-blue-100 text-blue-800 border-blue-200';
+    case 'renovation': return 'bg-green-100 text-green-800 border-green-200';
+    case 'extension': return 'bg-orange-100 text-orange-800 border-orange-200';
+    case 'amenagement': return 'bg-purple-100 text-purple-800 border-purple-200';
+    default: return 'bg-gray-100 text-gray-800 border-gray-200';
+  }
+};
+
+const getUrgenceColor = (urgence) => {
+  switch (urgence) {
+    case 'haute': return 'bg-red-100 text-red-800 border-red-200';
+    case 'normale': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+    default: return 'bg-gray-100 text-gray-800 border-gray-200';
+  }
+};
+
+const getStatutColor = (statut) => {
+  switch (statut) {
+    case 'ouvert': return 'bg-green-100 text-green-800 border-green-200';
+    case 'urgent': return 'bg-red-100 text-red-800 border-red-200';
+    default: return 'bg-gray-100 text-gray-800 border-gray-200';
+  }
+};

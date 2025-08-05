@@ -1,96 +1,162 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
+import ErrorHandler from '../utils/errorHandler';
+import NotificationSystem from '../utils/notifications';
 
 export default function GestionEtapes() {
   const [filtreStatut, setFiltreStatut] = useState('tous');
   const [filtreProjet, setFiltreProjet] = useState('tous');
+  const [etapes, setEtapes] = useState([]);
+  const [projets, setProjets] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
 
-  // Données simulées pour les étapes
-  const etapes = [
-    {
-      id: 1,
-      nom: "Étude de faisabilité",
-      projet: "Villa Moderne",
-      statut: "termine",
-      progression: 100,
-      dateDebut: "2024-01-15",
-      dateFin: "2024-02-15",
-      responsable: "Jean Dupont",
-      description: "Analyse technique et financière du projet",
-      taches: 8,
-      tachesTerminees: 8,
-      budget: 15000,
-      budgetUtilise: 14500
-    },
-    {
-      id: 2,
-      nom: "Plans architecturaux",
-      projet: "Villa Moderne",
-      statut: "en_cours",
-      progression: 75,
-      dateDebut: "2024-02-16",
-      dateFin: "2024-03-30",
-      responsable: "Marie Martin",
-      description: "Conception des plans détaillés",
-      taches: 12,
-      tachesTerminees: 9,
-      budget: 25000,
-      budgetUtilise: 18750
-    },
-    {
-      id: 3,
-      nom: "Permis de construire",
-      projet: "Villa Moderne",
-      statut: "en_attente",
-      progression: 30,
-      dateDebut: "2024-03-01",
-      dateFin: "2024-04-15",
-      responsable: "Pierre Durand",
-      description: "Dépôt et suivi du permis de construire",
-      taches: 6,
-      tachesTerminees: 2,
-      budget: 8000,
-      budgetUtilise: 2400
-    },
-    {
-      id: 4,
-      nom: "Gros œuvre",
-      projet: "Rénovation Appartement",
-      statut: "planifie",
-      progression: 0,
-      dateDebut: "2024-05-01",
-      dateFin: "2024-07-31",
-      responsable: "Paul Leroy",
-      description: "Travaux de structure et maçonnerie",
-      taches: 20,
-      tachesTerminees: 0,
-      budget: 45000,
-      budgetUtilise: 0
-    },
-    {
-      id: 5,
-      nom: "Second œuvre",
-      projet: "Rénovation Appartement",
-      statut: "planifie",
-      progression: 0,
-      dateDebut: "2024-08-01",
-      dateFin: "2024-10-15",
-      responsable: "Sophie Bernard",
-      description: "Électricité, plomberie, cloisons",
-      taches: 15,
-      tachesTerminees: 0,
-      budget: 35000,
-      budgetUtilise: 0
+  // Charger les données au montage
+  useEffect(() => {
+    loadUserAndData();
+  }, []);
+
+  const loadUserAndData = async () => {
+    try {
+      // Récupérer l'utilisateur connecté
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError) throw userError;
+
+      if (!user) {
+        ErrorHandler.showUserError('Vous devez être connecté pour accéder à cette page');
+        return;
+      }
+
+      // Récupérer le profil utilisateur
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      if (profileError) throw profileError;
+      setCurrentUser(profile);
+
+      // Charger les projets et étapes selon le rôle
+      await loadProjectsAndSteps(profile);
+
+    } catch (error) {
+      ErrorHandler.log(error, 'GestionEtapes.loadUserAndData');
+      ErrorHandler.showUserError('Erreur lors du chargement des données');
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
-  const projets = [...new Set(etapes.map(etape => etape.projet))];
+  const loadProjectsAndSteps = async (profile) => {
+    try {
+      let projetsQuery = supabase.from('projets').select('*');
+      
+      // Filtrer selon le rôle
+      if (profile.role === 'client') {
+        projetsQuery = projetsQuery.eq('client_id', profile.id);
+      } else if (profile.role === 'architecte') {
+        projetsQuery = projetsQuery.eq('architecte_id', profile.id);
+      }
+      // Les prestataires peuvent voir tous les projets où ils sont assignés
 
+      const { data: projetsData, error: projetsError } = await projetsQuery;
+      if (projetsError) throw projetsError;
+
+      setProjets(projetsData || []);
+
+      // Charger les étapes pour ces projets
+      if (projetsData && projetsData.length > 0) {
+        const projetIds = projetsData.map(p => p.id);
+        
+        const { data: etapesData, error: etapesError } = await supabase
+          .from('etapes')
+          .select(`
+            *,
+            projets:projet_id (
+              titre,
+              client_id,
+              architecte_id
+            )
+          `)
+          .in('projet_id', projetIds)
+          .order('date_debut', { ascending: false });
+
+        if (etapesError) throw etapesError;
+
+        // Transformer les données pour correspondre au format attendu
+        const etapesFormatted = etapesData?.map(etape => ({
+          id: etape.id,
+          nom: etape.nom,
+          projet: etape.projets?.titre || 'Projet inconnu',
+          statut: etape.statut,
+          progression: etape.progression || 0,
+          dateDebut: etape.date_debut,
+          dateFin: etape.date_fin,
+          responsable: etape.responsable || 'Non assigné',
+          description: etape.description || '',
+          taches: etape.nombre_taches || 0,
+          tachesTerminees: etape.taches_terminees || 0,
+          budget: etape.budget || 0,
+          budgetUtilise: etape.budget_utilise || 0
+        })) || [];
+
+        setEtapes(etapesFormatted);
+      }
+
+    } catch (error) {
+      ErrorHandler.log(error, 'GestionEtapes.loadProjectsAndSteps');
+      ErrorHandler.showUserError('Erreur lors du chargement des projets et étapes');
+    }
+  };
+
+  // Fonction pour mettre à jour une étape
+  const updateEtape = async (etapeId, updates) => {
+    try {
+      const { error } = await supabase
+        .from('etapes')
+        .update(updates)
+        .eq('id', etapeId);
+
+      if (error) throw error;
+
+      // Recharger les données
+      await loadProjectsAndSteps(currentUser);
+      NotificationSystem.success('Étape mise à jour avec succès');
+
+    } catch (error) {
+      ErrorHandler.log(error, 'GestionEtapes.updateEtape');
+      ErrorHandler.showUserError('Erreur lors de la mise à jour de l\'étape');
+    }
+  };
+
+  // Filtrer les étapes
   const etapesFiltrees = etapes.filter(etape => {
-    const filtreStatutOk = filtreStatut === 'tous' || etape.statut === filtreStatut;
-    const filtreProjetOk = filtreProjet === 'tous' || etape.projet === filtreProjet;
-    return filtreStatutOk && filtreProjetOk;
+    const matchStatut = filtreStatut === 'tous' || etape.statut === filtreStatut;
+    const matchProjet = filtreProjet === 'tous' || etape.projet === filtreProjet;
+    return matchStatut && matchProjet;
   });
+
+  // Calculer les statistiques
+  const stats = {
+    total: etapes.length,
+    terminees: etapes.filter(e => e.statut === 'termine').length,
+    enCours: etapes.filter(e => e.statut === 'en_cours').length,
+    enAttente: etapes.filter(e => e.statut === 'en_attente').length,
+    planifiees: etapes.filter(e => e.statut === 'planifie').length
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Chargement des étapes...</p>
+        </div>
+      </div>
+    );
+  }
 
   const getStatutColor = (statut) => {
     switch (statut) {
@@ -118,15 +184,6 @@ export default function GestionEtapes() {
     if (progression >= 50) return 'from-yellow-400 to-yellow-600';
     if (progression >= 25) return 'from-orange-400 to-orange-600';
     return 'from-red-400 to-red-600';
-  };
-
-  // Statistiques
-  const stats = {
-    total: etapes.length,
-    terminees: etapes.filter(e => e.statut === 'termine').length,
-    enCours: etapes.filter(e => e.statut === 'en_cours').length,
-    enAttente: etapes.filter(e => e.statut === 'en_attente').length,
-    planifiees: etapes.filter(e => e.statut === 'planifie').length
   };
 
   return (
@@ -209,7 +266,7 @@ export default function GestionEtapes() {
               >
                 <option value="tous">Tous les projets</option>
                 {projets.map(projet => (
-                  <option key={projet} value={projet}>{projet}</option>
+                  <option key={projet.id} value={projet.titre}>{projet.titre}</option>
                 ))}
               </select>
             </div>

@@ -34,13 +34,15 @@ import ResetPassword from './pages/ResetPassword';
 import GestionEtapes from './pages/GestionEtapes';
 import ProjetsDisponibles from './pages/ProjetsDisponibles';
 import AnalyticsDashboard from './pages/AnalyticsDashboard';
+import NotificationContainer from './components/NotificationContainer';
 
 import { useRouteTracking } from './hooks/usePageTracking';
+import OptimizedAnalytics from './utils/optimizedAnalytics';
 
-// 🎯 Composant wrapper pour tracker les routes
+// 🎯 Composant wrapper pour tracker les routes avec système optimisé
 function AppWithTracking() {
-  // Tracker automatiquement tous les changements de route
-  useRouteTracking();
+  // Tracker automatiquement tous les changements de route avec le système optimisé
+  useRouteTracking(OptimizedAnalytics);
 
   return (
     <Routes>
@@ -124,6 +126,7 @@ function App() {
   return (
     <Router>
       <AppWithTracking />
+      <NotificationContainer />
     </Router>
   );
 }

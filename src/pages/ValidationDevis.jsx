@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
+import ErrorHandler from '../utils/errorHandler';
 
 export default function ValidationDevis() {
   const [devisAValider, setDevisAValider] = useState([]);
@@ -32,7 +33,8 @@ export default function ValidationDevis() {
         setCurrentUser(userData);
       }
     } catch (error) {
-      console.error('Erreur récupération utilisateur:', error);
+      ErrorHandler.log(error, 'ValidationDevis.loadUser');
+      ErrorHandler.showUserError('Erreur lors du chargement du profil utilisateur');
     }
   };
 
@@ -125,7 +127,8 @@ export default function ValidationDevis() {
 
       setDevisAValider(filteredDevis);
     } catch (error) {
-      console.error('Erreur récupération devis:', error);
+      ErrorHandler.log(error, 'ValidationDevis.loadDevis');
+      ErrorHandler.showUserError('Erreur lors du chargement des devis');
     } finally {
       setLoading(false);
     }
@@ -187,8 +190,8 @@ export default function ValidationDevis() {
       
       alert(`✅ Devis ${decision === 'valide' ? 'validé' : 'rejeté'} avec succès !`);
     } catch (error) {
-      console.error('Erreur validation devis:', error);
-      alert('❌ Erreur lors de la validation');
+      ErrorHandler.log(error, 'ValidationDevis.validerDevis');
+      ErrorHandler.showUserError('Erreur lors de la validation du devis');
     }
   };
 

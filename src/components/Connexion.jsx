@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-import { trackLogin, trackEvent } from '../utils/analytics';
+import { trackEvent, trackLogin } from '../utils/analytics';
+import ErrorHandler from '../utils/errorHandler';
 
 export default function Connexion() {
   const [email, setEmail] = useState('');
@@ -71,7 +72,8 @@ export default function Connexion() {
         navigate(dashboardPath);
       }
     } catch (error) {
-      console.error('Erreur de connexion:', error);
+      ErrorHandler.log(error, 'Connexion');
+      ErrorHandler.showUserError('Erreur de connexion. Vérifiez vos identifiants.');
       setErreur(error.message);
     } finally {
       setLoading(false);
