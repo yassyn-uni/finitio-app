@@ -25,6 +25,7 @@ import SuiviDevis from './pages/SuiviDevis';
 import AnnuairePrestataires from './pages/AnnuairePrestataires';
 import EtapesProjet from './pages/EtapesProjet';
 import EtapesKanban from './pages/EtapesKanban';
+import Messages from './pages/Messages';
 
 // ✅ FONCTION PRINCIPALE (AVEC TOUTES LES ROUTES)
 function App() {
@@ -56,6 +57,9 @@ function App() {
         <Route path="/dashboard-client" element={<DashboardClient />} />
         <Route path="/dashboard-prestataire" element={<DashboardPrestataire />} />
         <Route path="/dashboard-architecte" element={<DashboardArchitecte />} />
+
+        {/* Messages */}
+        <Route path="/messages" element={<Messages />} />
 
         {/* Projets */}
         <Route path="/nouveau-projet" element={<NouveauProjet />} />
@@ -92,7 +96,6 @@ function App() {
         <Route path="/devis/suivi" element={<SuiviDevis />} />
         
         {/* Routes temporaires pour éviter les 404 */}
-        <Route path="/messages" element={<ListeProjets />} />
         <Route path="/annuaire-prestataires" element={<AnnuairePrestataires />} />
       </Routes>
     </Router>
