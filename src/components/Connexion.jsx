@@ -29,8 +29,32 @@ export default function Connexion() {
         // Stocker le début de session pour calculer la durée
         localStorage.setItem('session_start', Date.now().toString());
 
+        // Récupérer le profil utilisateur pour déterminer le rôle
+        const { data: profile } = await supabase
+          .from('users')
+          .select('role')
+          .eq('id', data.user.id)
+          .single();
+
         // Redirection selon le rôle
-        const dashboardPath = '/dashboard';
+        let dashboardPath = '/dashboard'; // Fallback par défaut
+        
+        if (profile?.role) {
+          switch (profile.role.toLowerCase()) {
+            case 'client':
+              dashboardPath = '/dashboard-client';
+              break;
+            case 'architecte':
+              dashboardPath = '/dashboard-architecte';
+              break;
+            case 'prestataire':
+              dashboardPath = '/dashboard-prestataire';
+              break;
+            default:
+              dashboardPath = '/dashboard';
+          }
+        }
+        
         navigate(dashboardPath);
       }
     } catch (error) {
