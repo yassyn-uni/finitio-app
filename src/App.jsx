@@ -14,6 +14,8 @@ import NotificationContainer from './components/NotificationContainer';
 
 // Import du nouveau thème premium
 import './styles/premiumTheme.css';
+// Import de l'harmonisation complète des couleurs
+import './styles/colorHarmonization.css';
 
 import Dashboard from './pages/Dashboard';
 import DashboardClient from './pages/DashboardClient';

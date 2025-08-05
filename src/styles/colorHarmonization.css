@@ -1,0 +1,234 @@
+/* 🎨 HARMONISATION COMPLÈTE DES COULEURS FINITIO */
+/* ================================================ */
+/* Palette unique orange premium pour toute l'application */
+
+/* 🔧 REMPLACEMENT DE TOUTES LES COULEURS EXISTANTES */
+
+/* Remplacer tous les bleus par orange */
+.bg-blue-50 { background-color: #fff7ed !important; }
+.bg-blue-100 { background-color: #ffedd5 !important; }
+.bg-blue-500 { background-color: #f97316 !important; }
+.bg-blue-600 { background-color: #ea580c !important; }
+.bg-blue-700 { background-color: #c2410c !important; }
+
+.text-blue-600 { color: #ea580c !important; }
+.text-blue-700 { color: #c2410c !important; }
+.text-blue-800 { color: #9a3412 !important; }
+
+.border-blue-200 { border-color: #fed7aa !important; }
+.border-blue-300 { border-color: #fdba74 !important; }
+
+/* Remplacer tous les indigos par orange foncé */
+.bg-indigo-50 { background-color: #fff7ed !important; }
+.bg-indigo-100 { background-color: #ffedd5 !important; }
+.bg-indigo-500 { background-color: #ea580c !important; }
+.bg-indigo-600 { background-color: #dc2626 !important; }
+.bg-indigo-900 { background-color: #7c2d12 !important; }
+.bg-indigo-950 { background-color: #431407 !important; }
+
+.text-indigo-600 { color: #ea580c !important; }
+
+/* Remplacer tous les violets/purples par orange */
+.bg-purple-500 { background-color: #f97316 !important; }
+.text-purple-600 { color: #ea580c !important; }
+
+/* Remplacer tous les teals par orange-vert */
+.bg-teal-500 { background-color: #059669 !important; }
+.bg-teal-600 { background-color: #047857 !important; }
+.text-teal-600 { color: #047857 !important; }
+
+/* Remplacer tous les emeralds par vert harmonisé */
+.bg-emerald-50 { background-color: #f0fdf4 !important; }
+.bg-emerald-600 { color: #059669 !important; }
+.text-emerald-600 { color: #059669 !important; }
+.text-emerald-800 { color: #065f46 !important; }
+
+/* 🎨 GRADIENTS HARMONISÉS */
+.bg-gradient-to-br.from-blue-50.via-white.to-indigo-50 {
+  background: linear-gradient(to bottom right, #fff7ed, #ffffff, #ffedd5) !important;
+}
+
+.bg-gradient-to-br.from-blue-50.to-indigo-100 {
+  background: linear-gradient(to bottom right, #fff7ed, #ffedd5) !important;
+}
+
+.bg-gradient-to-br.from-emerald-50.via-teal-50.to-cyan-100 {
+  background: linear-gradient(to bottom right, #f0fdf4, #ecfdf5, #dcfce7) !important;
+}
+
+.bg-gradient-to-br.from-amber-50.via-orange-50.to-red-100 {
+  background: linear-gradient(to bottom right, #fffbeb, #fff7ed, #fef2f2) !important;
+}
+
+.bg-gradient-to-br.from-indigo-900.to-blue-700 {
+  background: linear-gradient(to bottom right, #7c2d12, #c2410c) !important;
+}
+
+/* Gradients de texte harmonisés */
+.bg-gradient-to-r.from-emerald-600.to-teal-600 {
+  background: linear-gradient(to right, #059669, #047857) !important;
+}
+
+.bg-gradient-to-r.from-orange-600.to-red-600 {
+  background: linear-gradient(to right, #ea580c, #dc2626) !important;
+}
+
+.bg-gradient-to-r.from-primary-500.to-primary-600 {
+  background: linear-gradient(to right, #f97316, #ea580c) !important;
+}
+
+.bg-gradient-to-r.from-secondary-500.to-secondary-600 {
+  background: linear-gradient(to right, #059669, #047857) !important;
+}
+
+/* 🔧 COULEURS SPÉCIFIQUES HARDCODÉES */
+.bg-\[#10b981\] { background-color: #059669 !important; }
+.hover\:bg-\[#059669\]:hover { background-color: #047857 !important; }
+.bg-\[#03045E\] { background-color: #7c2d12 !important; }
+.hover\:bg-\[#023e8a\]:hover { background-color: #431407 !important; }
+
+/* Gradients bleus spécifiques */
+.bg-gradient-to-r.from-\[#00B4D8\].to-\[#0077B6\] {
+  background: linear-gradient(to right, #f97316, #ea580c) !important;
+}
+
+.text-\[#0077B6\] { color: #ea580c !important; }
+
+/* 🎯 CLASSES UTILITAIRES HARMONISÉES */
+.text-primary { color: #ea580c !important; }
+.bg-primary { background-color: #ea580c !important; }
+.border-primary { border-color: #ea580c !important; }
+
+.text-secondary { color: #059669 !important; }
+.bg-secondary { background-color: #059669 !important; }
+.border-secondary { border-color: #059669 !important; }
+
+.text-accent { color: #f97316 !important; }
+.bg-accent { background-color: #f97316 !important; }
+.border-accent { border-color: #f97316 !important; }
+
+/* 🏗️ CONSTRUCTION GRADIENTS HARMONISÉS */
+.construction-gradient {
+  background: linear-gradient(135deg, #7c2d12 0%, #ea580c 50%, #f97316 100%) !important;
+}
+
+.construction-accent-gradient {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+}
+
+/* 📊 STATS ET CARTES HARMONISÉES */
+.stats-card {
+  background: rgba(255, 247, 237, 0.9) !important;
+  border: 1px solid #fed7aa !important;
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.stats-number {
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  color: #ea580c !important;
+  margin-bottom: 0.5rem;
+}
+
+.stats-label {
+  color: #9a3412 !important;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* 🎨 GLASS EFFECTS HARMONISÉS */
+.glass-effect {
+  background: rgba(255, 247, 237, 0.8) !important;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(249, 115, 22, 0.2) !important;
+}
+
+.glass-effect-dark {
+  background: rgba(124, 45, 18, 0.8) !important;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+/* 🎯 BOUTONS HARMONISÉS */
+.btn-primary {
+  background: linear-gradient(135deg, #f97316, #ea580c) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #ea580c, #c2410c) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(249, 115, 22, 0.3) !important;
+}
+
+.btn-secondary {
+  background: white !important;
+  color: #ea580c !important;
+  border: 2px solid #ea580c !important;
+}
+
+.btn-secondary:hover {
+  background: #ea580c !important;
+  color: white !important;
+}
+
+.btn-outline {
+  background: transparent !important;
+  color: white !important;
+  border: 2px solid white !important;
+}
+
+.btn-outline:hover {
+  background: white !important;
+  color: #7c2d12 !important;
+}
+
+/* 📱 RESPONSIVE HARMONISÉ */
+@media (max-width: 768px) {
+  .stats-card {
+    padding: 1rem;
+  }
+  
+  .stats-number {
+    font-size: 1.5rem !important;
+  }
+}
+
+/* 🎨 ANIMATIONS HARMONISÉES */
+@keyframes pulse-orange {
+  0%, 100% { 
+    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(249, 115, 22, 0);
+  }
+}
+
+.animate-pulse-orange {
+  animation: pulse-orange 2s infinite;
+}
+
+/* 🔧 FORCE OVERRIDE POUR TOUS LES CAS */
+* {
+  /* Remplacer toutes les couleurs bleues */
+}
+
+*[class*="blue-"] {
+  color: #ea580c !important;
+}
+
+*[class*="bg-blue-"] {
+  background-color: #f97316 !important;
+}
+
+*[class*="indigo-"] {
+  color: #ea580c !important;
+}
+
+*[class*="bg-indigo-"] {
+  background-color: #7c2d12 !important;
+}
