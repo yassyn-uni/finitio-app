@@ -129,51 +129,125 @@ class OptimizedAnalytics {
 
   // Session tracking optimisé
   static async trackSession() {
-    const deviceInfo = {
-      type: this.getDeviceType(),
-      screen: `${window.screen.width}x${window.screen.height}`,
-      viewport: `${window.innerWidth}x${window.innerHeight}`,
-      userAgent: navigator.userAgent.substring(0, 200), // Limiter la taille
-      language: navigator.language,
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
-    };
+    try {
+      const sessionData = {
+        session_id: this.sessionId,
+        user_id: this.userId,
+        start_time: new Date().toISOString(),
+        user_agent: navigator.userAgent,
+        screen_resolution: `${screen.width}x${screen.height}`,
+        viewport_size: `${window.innerWidth}x${window.innerHeight}`,
+        referrer: document.referrer || null,
+        landing_page: window.location.pathname,
+        device_type: this.getDeviceType(),
+        browser: this.getBrowser(),
+        os: this.getOS(),
+        is_mobile: this.isMobile(),
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        language: navigator.language,
+        device_info: {
+          platform: navigator.platform,
+          cookieEnabled: navigator.cookieEnabled,
+          onLine: navigator.onLine
+        },
+        utm_source: new URLSearchParams(window.location.search).get('utm_source'),
+        utm_medium: new URLSearchParams(window.location.search).get('utm_medium'),
+        utm_campaign: new URLSearchParams(window.location.search).get('utm_campaign')
+      };
 
-    this.queueEvent('analytics_sessions', {
-      device_info: deviceInfo,
-      utm_source: this.getUtmSource(),
-      utm_medium: this.getUtmMedium(),
-      utm_campaign: this.getUtmCampaign()
-    });
+      // Tentative d'insertion avec gestion d'erreur silencieuse
+      const { error } = await supabase
+        .from('analytics_sessions')
+        .insert([sessionData]);
+
+      if (error && error.code !== 'PGRST301') { // Ignorer les erreurs RLS
+        if (import.meta.env.DEV) {
+          console.warn('📊 Analytics session tracking skipped (unauthorized)');
+        }
+      } else if (import.meta.env.DEV) {
+        console.log('📊 Analytics Finitio initialisé:', this.sessionId);
+      }
+
+    } catch (error) {
+      // Gestion silencieuse des erreurs analytics
+      if (import.meta.env.DEV) {
+        console.warn('📊 Analytics session tracking failed:', error.message);
+      }
+    }
   }
 
   // Page view tracking avec debounce
-  static trackPageView(pageName, pagePath, pageTitle) {
-    // Éviter les doublons de page view
-    const pageKey = `${pageName}_${pagePath}`;
-    if (this.lastPageView === pageKey) return;
+  static async trackPageView(path = window.location.pathname, title = document.title) {
+    try {
+      const pageViewData = {
+        session_id: this.sessionId,
+        user_id: this.userId,
+        page_path: path,
+        page_name: title, // Ajout du champ obligatoire page_name
+        page_title: title,
+        timestamp: new Date().toISOString(),
+        time_on_previous_page: this.lastPageView ? 
+          Math.round((Date.now() - this.lastPageView) / 1000) : null
+      };
 
-    this.debounce(`pageview_${pageKey}`, () => {
-      this.queueEvent('analytics_page_views', {
-        page_name: pageName,
-        page_path: pagePath,
-        page_title: pageTitle,
-        referrer: document.referrer || null,
-        visit_duration: this.calculateVisitDuration(),
-        scroll_depth: this.getScrollDepth()
-      });
+      // Tentative d'insertion avec gestion d'erreur silencieuse
+      const { error } = await supabase
+        .from('analytics_page_views')
+        .insert([pageViewData]);
 
-      this.lastPageView = pageKey;
-    }, 500); // Debounce plus court pour les page views
+      if (error && error.code !== 'PGRST301') { // Ignorer les erreurs RLS
+        if (import.meta.env.DEV) {
+          console.warn('📊 Analytics page view tracking skipped (unauthorized)');
+        }
+      } else if (import.meta.env.DEV) {
+        console.log('📄 Page vue trackée:', path);
+      }
+
+      this.lastPageView = Date.now();
+
+    } catch (error) {
+      // Gestion silencieuse des erreurs analytics
+      if (import.meta.env.DEV) {
+        console.warn('📄 Page view tracking failed:', error.message);
+      }
+    }
   }
 
   // Event tracking avec debounce
-  static trackEvent(eventName, properties = {}) {
-    this.debounce(`event_${eventName}`, () => {
-      this.queueEvent('analytics_events', {
+  static async trackEvent(eventName, properties = {}) {
+    if (!this.isInitialized) {
+      await this.init();
+    }
+
+    try {
+      const eventData = {
+        session_id: this.sessionId,
+        user_id: this.userId,
         event_name: eventName,
-        properties: this.sanitizeProperties(properties)
-      });
-    });
+        properties: properties, // Utiliser 'properties' au lieu de 'event_data'
+        timestamp: new Date().toISOString(),
+        page_path: window.location.pathname
+      };
+
+      // Tentative d'insertion avec gestion d'erreur silencieuse
+      const { error } = await supabase
+        .from('analytics_events')
+        .insert([eventData]);
+
+      if (error && error.code !== 'PGRST301') { // Ignorer les erreurs RLS
+        if (import.meta.env.DEV) {
+          console.warn(`📊 Event '${eventName}' tracking skipped (unauthorized)`);
+        }
+      } else if (import.meta.env.DEV) {
+        console.log(`🎯 Événement tracké: ${eventName}`, properties);
+      }
+
+    } catch (error) {
+      // Gestion silencieuse des erreurs analytics
+      if (import.meta.env.DEV) {
+        console.warn(`🎯 Event '${eventName}' tracking failed:`, error.message);
+      }
+    }
   }
 
   // Signup tracking

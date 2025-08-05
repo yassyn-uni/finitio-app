@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import OptimizedAnalytics from '../utils/optimizedAnalytics';
+import { FinitioIcon } from '../assets/FinitioAssets';
 
 export default function Fonctionnalites() {
   const [activeFeature, setActiveFeature] = useState(0);
