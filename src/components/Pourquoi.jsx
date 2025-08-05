@@ -34,28 +34,25 @@ const Pourquoi = () => {
 
   const temoignages = [
     {
-      id: 'ahmed-benali',
-      nom: 'Ahmed Benali',
+      id: 'karim-hassan',
+      nom: 'Karim Hassan',
       poste: 'Directeur de Travaux',
-      entreprise: 'BTP Maroc Excellence',
       photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80',
       temoignage: 'Finitio a révolutionné notre façon de gérer les projets. Nous avons réduit nos délais de 30% et nos clients sont ravis de la transparence.',
       note: 5
     },
     {
-      id: 'fatima-zahra',
-      nom: 'Fatima Zahra El Mansouri',
+      id: 'sara-bennani',
+      nom: 'Sara Bennani',
       poste: 'Architecte',
-      entreprise: 'Design & Construction',
       photo: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80',
       temoignage: 'L\'interface est intuitive et la collaboration avec les équipes n\'a jamais été aussi fluide. Un outil indispensable pour tout professionnel.',
       note: 5
     },
     {
-      id: 'youssef-alami',
-      nom: 'Youssef Alami',
+      id: 'omar-tazi',
+      nom: 'Omar Tazi',
       poste: 'Chef d\'Entreprise',
-      entreprise: 'Alami Construction',
       photo: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80',
       temoignage: 'Depuis que nous utilisons Finitio, notre productivité a explosé. Le ROI a été immédiat et nos équipes sont plus motivées.',
       note: 5
@@ -79,7 +76,7 @@ const Pourquoi = () => {
         </div>
 
         {/* Avantages */}
-        <div className="grid-2 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           {avantages.map((avantage) => (
             <div key={avantage.id} className="card-white">
               <div className="flex items-start gap-4">
@@ -101,15 +98,6 @@ const Pourquoi = () => {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Photo de chantier */}
-        <div className="photo-container max-w-5xl mx-auto mb-16">
-          <img 
-            src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
-            alt="Chantier de construction moderne avec équipe professionnelle"
-            className="w-full h-auto"
-          />
         </div>
 
         {/* Témoignages */}
@@ -156,9 +144,6 @@ const Pourquoi = () => {
                 </h4>
                 <p className="text-sm" style={{color: 'var(--light-gray)'}}>
                   {temoignage.poste}
-                </p>
-                <p className="text-sm font-medium" style={{color: 'var(--orange)'}}>
-                  {temoignage.entreprise}
                 </p>
               </div>
             </div>

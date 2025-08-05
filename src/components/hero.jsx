@@ -63,8 +63,8 @@ const Hero = () => {
           {/* Photo de construction */}
           <div className="photo-container max-w-4xl mx-auto mt-12">
             <img 
-              src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
-              alt="Équipe de construction professionnelle"
+              src="https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+              alt="Villa moderne au Maroc avec architecture contemporaine"
               className="w-full h-auto"
             />
           </div>
