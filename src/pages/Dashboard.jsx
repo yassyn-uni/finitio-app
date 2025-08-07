@@ -49,6 +49,9 @@ export default function Dashboard() {
             case 'prestataire':
               navigate('/dashboard-prestataire');
               return;
+            case 'fournisseur':
+              navigate('/dashboard-fournisseur');
+              return;
           }
         }
       } catch (error) {
@@ -89,7 +92,7 @@ export default function Dashboard() {
         </div>
 
         {/* Grille des dashboards spécialisés */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
           {/* Dashboard Client */}
           <Link 
             to="/dashboard-client"
@@ -137,6 +140,24 @@ export default function Dashboard() {
               Découvrez des projets, soumettez vos devis et développez votre activité.
             </p>
             <div className="mt-4 flex items-center text-orange-300 group-hover:text-orange-200">
+              <span className="text-sm font-medium">Accéder</span>
+              <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </Link>
+
+          {/* Dashboard Fournisseur */}
+          <Link 
+            to="/dashboard-fournisseur"
+            className="group bg-white/10 rounded-xl p-6 shadow-lg hover:bg-white/20 transition-all duration-300 transform hover:-translate-y-2 backdrop-blur-sm border border-white/20"
+          >
+            <div className="text-4xl mb-4 group-hover:animate-bounce">📦</div>
+            <h2 className="text-xl font-semibold mb-2">Espace Fournisseur</h2>
+            <p className="text-white/80 text-sm">
+              Gérez votre catalogue de matériaux, traitez les commandes et développez votre réseau.
+            </p>
+            <div className="mt-4 flex items-center text-purple-300 group-hover:text-purple-200">
               <span className="text-sm font-medium">Accéder</span>
               <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

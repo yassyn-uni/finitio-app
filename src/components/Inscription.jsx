@@ -177,7 +177,6 @@ export default function Inscription() {
         options: {
           data: {
             nom: formData.nom,
-            prenom: formData.prenom,
             role: formData.role,
             telephone: formData.telephone,
             ville: formData.ville
@@ -254,6 +253,13 @@ export default function Inscription() {
       description: 'Je réalise des travaux de construction',
       icon: '🔨',
       color: 'from-orange-500 to-red-600'
+    },
+    { 
+      value: 'fournisseur', 
+      label: 'Fournisseur', 
+      description: 'Je fournis des matériaux et équipements',
+      icon: '📦',
+      color: 'from-purple-500 to-pink-600'
     }
   ];
 
