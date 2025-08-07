@@ -8,32 +8,59 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
+  // Écouter les changements d'authentification en temps réel
   React.useEffect(() => {
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
       
       if (user) {
-        // Récupérer le rôle depuis localStorage ou base de données
-        const savedRole = localStorage.getItem('user_role');
-        if (savedRole) {
-          setUserRole(savedRole);
-        } else {
-          // Récupérer depuis la base de données si pas en localStorage
-          const { data: profile } = await supabase
-            .from('users')
-            .select('role')
-            .eq('id', user.id)
-            .single();
-          
-          if (profile?.role) {
-            setUserRole(profile.role);
-            localStorage.setItem('user_role', profile.role);
-          }
+        // Toujours récupérer le rôle depuis la base de données pour être sûr
+        const { data: profile } = await supabase
+          .from('users')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+        
+        if (profile?.role) {
+          setUserRole(profile.role);
+          localStorage.setItem('user_role', profile.role);
         }
+      } else {
+        // Nettoyer si pas d'utilisateur
+        setUserRole('');
+        localStorage.removeItem('user_role');
       }
     };
+
+    // Écouter les changements d'authentification
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        setUser(session.user);
+        
+        // Récupérer le rôle immédiatement après connexion
+        const { data: profile } = await supabase
+          .from('users')
+          .select('role')
+          .eq('id', session.user.id)
+          .single();
+        
+        if (profile?.role) {
+          setUserRole(profile.role);
+          localStorage.setItem('user_role', profile.role);
+        }
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setUserRole('');
+        localStorage.removeItem('user_role');
+      }
+    });
+
+    // Récupérer l'utilisateur initial
     getUser();
+
+    // Nettoyer l'abonnement
+    return () => subscription.unsubscribe();
   }, []);
 
   const handleLogout = async () => {
