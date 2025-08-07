@@ -79,6 +79,8 @@ const Navbar = () => {
         return '/dashboard-architecte';
       case 'prestataire':
         return '/dashboard-prestataire';
+      case 'fournisseur':
+        return '/dashboard-fournisseur';
       default:
         return '/dashboard';
     }
@@ -92,6 +94,8 @@ const Navbar = () => {
         return 'Espace Architecte';
       case 'prestataire':
         return 'Espace Prestataire';
+      case 'fournisseur':
+        return 'Espace Fournisseur';
       default:
         return 'Dashboard';
     }
@@ -154,7 +158,7 @@ const Navbar = () => {
                   <span className="text-white font-medium text-sm">{user.email}</span>
                   {userRole && (
                     <span className="text-blue-200 text-xs capitalize">
-                      {userRole === 'client' ? '🏠 Client' : userRole === 'architecte' ? '🏛️ Architecte' : '🔨 Prestataire'}
+                      {userRole === 'client' ? '🏠 Client' : userRole === 'architecte' ? '🏛️ Architecte' : userRole === 'prestataire' ? '🔨 Prestataire' : '📦 Fournisseur'}
                     </span>
                   )}
                 </div>
@@ -227,7 +231,7 @@ const Navbar = () => {
                     <span className="text-sm font-medium">{user.email}</span>
                     {userRole && (
                       <span className="text-xs text-blue-200 capitalize">
-                        {userRole === 'client' ? '🏠 Client' : userRole === 'architecte' ? '🏛️ Architecte' : '🔨 Prestataire'}
+                        {userRole === 'client' ? '🏠 Client' : userRole === 'architecte' ? '🏛️ Architecte' : userRole === 'prestataire' ? '🔨 Prestataire' : '📦 Fournisseur'}
                       </span>
                     )}
                   </div>
