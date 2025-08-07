@@ -48,23 +48,41 @@ export default function DashboardClient() {
 
       setUser(user);
 
-      // Récupérer le profil utilisateur
-      const { data: profile } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', user.id)
-        .single();
+      try {
+        // Récupérer le profil utilisateur
+        const { data: profile, error: profileError } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', user.id)
+          .single();
 
-      setUserProfile(profile);
+        if (profileError) {
+          console.error('Erreur récupération profil:', profileError);
+          // Continuer même si erreur profil
+          setUserProfile(null);
+        } else {
+          setUserProfile(profile);
+        }
 
-      // Récupérer les projets du client
-      const { data: projetsData } = await supabase
-        .from('projets')
-        .select('*')
-        .eq('client_id', user.id)
-        .order('created_at', { ascending: false });
+        // Récupérer les projets du client
+        const { data: projetsData, error: projetsError } = await supabase
+          .from('projets')
+          .select('*')
+          .eq('user_id', user.id) // Utiliser user_id au lieu de client_id
+          .order('created_at', { ascending: false });
 
-      setProjets(projetsData || []);
+        if (projetsError) {
+          console.error('Erreur récupération projets:', projetsError);
+          setProjets([]);
+        } else {
+          setProjets(projetsData || []);
+        }
+      } catch (error) {
+        console.error('Erreur générale:', error);
+        setUserProfile(null);
+        setProjets([]);
+      }
+
       setLoading(false);
 
       // 📊 Tracker le chargement du dashboard

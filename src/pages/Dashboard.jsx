@@ -19,28 +19,41 @@ export default function Dashboard() {
 
       setUser(user);
 
-      // Récupérer le profil utilisateur pour déterminer le rôle
-      const { data: profile } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', user.id)
-        .single();
+      try {
+        // Récupérer le profil utilisateur pour déterminer le rôle
+        const { data: profile, error } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', user.id)
+          .single();
 
-      setUserProfile(profile);
-
-      // Rediriger automatiquement vers le dashboard spécifique si un rôle est défini
-      if (profile?.role) {
-        switch (profile.role.toLowerCase()) {
-          case 'client':
-            navigate('/dashboard-client');
-            return;
-          case 'architecte':
-            navigate('/dashboard-architecte');
-            return;
-          case 'prestataire':
-            navigate('/dashboard-prestataire');
-            return;
+        if (error) {
+          console.error('Erreur récupération profil:', error);
+          // Si erreur RLS/UUID, ne pas déconnecter mais afficher un message
+          setUserProfile(null);
+          setLoading(false);
+          return;
         }
+
+        setUserProfile(profile);
+
+        // Rediriger automatiquement vers le dashboard spécifique si un rôle est défini
+        if (profile?.role) {
+          switch (profile.role.toLowerCase()) {
+            case 'client':
+              navigate('/dashboard-client');
+              return;
+            case 'architecte':
+              navigate('/dashboard-architecte');
+              return;
+            case 'prestataire':
+              navigate('/dashboard-prestataire');
+              return;
+          }
+        }
+      } catch (error) {
+        console.error('Erreur lors de la récupération du profil:', error);
+        setUserProfile(null);
       }
 
       setLoading(false);
