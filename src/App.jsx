@@ -7,6 +7,7 @@ import Fonctionnalites from './components/Fonctionnalites';
 import Footer from './components/Footer';
 import Connexion from './components/Connexion';
 import Inscription from './components/Inscription';
+import OnboardingGuide from './components/OnboardingGuide';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { supabase } from './supabaseClient';
 // SUPPRIMÉ: import './utils/analytics'; - Causait les erreurs 400
@@ -122,6 +123,7 @@ function AppWithTracking() {
       
       {/* Routes temporaires pour éviter les 404 */}
       <Route path="/annuaire-prestataires" element={<AnnuairePrestataires />} />
+      <Route path="/onboarding-guide" element={<OnboardingGuide />} />
     </Routes>
   );
 }
