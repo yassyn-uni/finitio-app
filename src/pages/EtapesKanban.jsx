@@ -139,13 +139,18 @@ export default function EtapesKanban() {
                     onDragEnd={handleDragEnd}
                     className="bg-white p-2 md:p-3 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all cursor-move hover:scale-105"
                   >
-                    <strong className="text-sm md:text-base block mb-1 text-gray-800">
-                      {etape.nom}
+                    <strong className="text-sm md:text-base block mb-2 text-gray-900 font-semibold">
+                      {etape.nom || etape.titre}
                     </strong>
                     {etape.description && (
-                      <p className="text-xs md:text-sm text-gray-600">
+                      <p className="text-xs md:text-sm text-gray-700 leading-relaxed">
                         {etape.description}
                       </p>
+                    )}
+                    {etape.budget_estime && (
+                      <div className="mt-2 text-xs text-blue-600 font-medium">
+                        💰 {etape.budget_estime.toLocaleString()} MAD
+                      </div>
                     )}
                   </div>
                 ))}
