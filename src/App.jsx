@@ -24,6 +24,7 @@ import Dashboard from './pages/Dashboard';
 import DashboardClient from './pages/DashboardClient';
 import DashboardPrestataire from './pages/DashboardPrestataire';
 import DashboardArchitecte from './pages/DashboardArchitecte';
+import DashboardFournisseur from './pages/DashboardFournisseur';
 import ListeProjets from './pages/ListeProjets';
 import DetailProjet from './pages/DetailProjet';
 import NouveauProjet from './pages/NouveauProjet';
@@ -44,6 +45,7 @@ import ResetPassword from './pages/ResetPassword';
 import GestionEtapes from './pages/GestionEtapes';
 import ProjetsDisponibles from './pages/ProjetsDisponibles';
 import AnalyticsDashboard from './pages/AnalyticsDashboard';
+import CatalogueProduits from './pages/CatalogueProduits';
 
 // 🎯 Composant wrapper pour tracker les routes avec système optimisé
 function AppWithTracking() {
@@ -79,6 +81,7 @@ function AppWithTracking() {
         <Route path="/dashboard-client" element={<DashboardClient />} />
         <Route path="/dashboard-prestataire" element={<DashboardPrestataire />} />
         <Route path="/dashboard-architecte" element={<DashboardArchitecte />} />
+        <Route path="/dashboard-fournisseur" element={<DashboardFournisseur />} />
         <Route path="/analytics" element={<AnalyticsDashboard />} />
 
         {/* Messages */}
@@ -128,6 +131,9 @@ function AppWithTracking() {
         {/* Routes temporaires pour éviter les 404 */}
         <Route path="/annuaire-prestataires" element={<AnnuairePrestataires />} />
         <Route path="/onboarding-guide" element={<OnboardingGuide />} />
+        
+        {/* Pages Fournisseur */}
+        <Route path="/catalogue-produits" element={<CatalogueProduits />} />
       </Routes>
     </>
   );

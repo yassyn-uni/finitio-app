@@ -2,11 +2,32 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
 import { useParams } from 'react-router-dom';
 
-// Configuration des colonnes
+// Configuration des colonnes avec couleurs améliorées pour lisibilité
 const COLUMNS = [
-  { id: 'todo', statut: 'à faire', nom: '📋 À faire', color: 'bg-red-50 border-red-200' },
-  { id: 'progress', statut: 'en cours', nom: '⚡ En cours', color: 'bg-yellow-50 border-yellow-200' },
-  { id: 'done', statut: 'terminée', nom: '✅ Terminée', color: 'bg-green-50 border-green-200' }
+  { 
+    id: 'todo', 
+    statut: 'à faire', 
+    nom: '📋 À faire', 
+    color: 'bg-red-50 border-red-300 border-l-4 border-l-red-500',
+    headerColor: 'bg-red-100 text-red-800 border-red-300',
+    badgeColor: 'bg-red-500 text-white'
+  },
+  { 
+    id: 'progress', 
+    statut: 'en cours', 
+    nom: '⚡ En cours', 
+    color: 'bg-amber-50 border-amber-300 border-l-4 border-l-amber-500',
+    headerColor: 'bg-amber-100 text-amber-800 border-amber-300',
+    badgeColor: 'bg-amber-500 text-white'
+  },
+  { 
+    id: 'done', 
+    statut: 'terminée', 
+    nom: '✅ Terminée', 
+    color: 'bg-emerald-50 border-emerald-300 border-l-4 border-l-emerald-500',
+    headerColor: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+    badgeColor: 'bg-emerald-500 text-white'
+  }
 ];
 
 export default function EtapesKanban() {
@@ -111,24 +132,27 @@ export default function EtapesKanban() {
 
   return (
     <div className="p-2 md:p-4">
-      <h3 className="text-lg font-bold mb-4">📌 Kanban des étapes</h3>
+      <h3 className="text-xl font-bold mb-6 text-gray-800">📌 Kanban des étapes</h3>
       
-      <div className="flex flex-col md:grid md:grid-cols-3 gap-2 md:gap-4">
+      {/* Layout en colonnes pour desktop, stack pour mobile */}
+      <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
         {COLUMNS.map((column) => (
           <div 
             key={column.id} 
-            className={`rounded-lg border-2 ${column.color} p-2 md:p-3 min-h-[300px]`}
+            className={`flex-1 rounded-xl border-2 ${column.color} p-4 min-h-[400px] shadow-sm hover:shadow-md transition-shadow`}
             onDragOver={handleDragOver}
             onDrop={(e) => handleDrop(e, column.statut)}
           >
-            <h4 className="font-semibold mb-3 text-sm md:text-base">
-              {column.nom}
-              <span className="ml-2 bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs">
-                {etapes.filter(e => e.statut === column.statut).length}
-              </span>
-            </h4>
+            <div className={`p-3 rounded-lg mb-4 ${column.headerColor} border`}>
+              <h4 className="font-bold text-base flex items-center justify-between">
+                <span>{column.nom}</span>
+                <span className={`${column.badgeColor} px-3 py-1 rounded-full text-xs font-medium`}>
+                  {etapes.filter(e => e.statut === column.statut).length}
+                </span>
+              </h4>
+            </div>
             
-            <div className="space-y-2">
+            <div className="space-y-3">
               {etapes
                 .filter(e => e.statut === column.statut)
                 .map((etape) => (
@@ -137,21 +161,24 @@ export default function EtapesKanban() {
                     draggable
                     onDragStart={(e) => handleDragStart(e, etape)}
                     onDragEnd={handleDragEnd}
-                    className="bg-white p-2 md:p-3 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all cursor-move hover:scale-105"
+                    className="bg-white p-4 rounded-lg shadow-md border border-gray-300 hover:shadow-lg transition-all cursor-move hover:scale-[1.02] hover:border-blue-400"
                   >
-                    <strong className="text-sm md:text-base block mb-2 text-gray-900 font-semibold">
+                    <strong className="text-base block mb-2 text-gray-900 font-semibold leading-tight">
                       {etape.nom || etape.titre}
                     </strong>
                     {etape.description && (
-                      <p className="text-xs md:text-sm text-gray-700 leading-relaxed">
+                      <p className="text-sm text-gray-700 leading-relaxed mb-2">
                         {etape.description}
                       </p>
                     )}
-                    {etape.budget_estime && (
-                      <div className="mt-2 text-xs text-blue-600 font-medium">
-                        💰 {etape.budget_estime.toLocaleString()} MAD
-                      </div>
-                    )}
+                    <div className="flex items-center justify-between text-xs text-gray-500">
+                      <span>Ordre: {etape.ordre}</span>
+                      {etape.budget_estime && (
+                        <span className="text-blue-600 font-medium">
+                          💰 {etape.budget_estime.toLocaleString()} MAD
+                        </span>
+                      )}
+                    </div>
                   </div>
                 ))}
             </div>
@@ -159,10 +186,12 @@ export default function EtapesKanban() {
         ))}
       </div>
 
-      {/* Instructions */}
-      <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-        <p className="text-sm text-blue-700">
-          💡 <strong>Instructions :</strong> Glissez-déposez les étapes entre les colonnes pour changer leur statut.
+      {/* Instructions améliorées */}
+      <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+        <p className="text-sm text-blue-800 flex items-center">
+          <span className="text-lg mr-2">💡</span>
+          <strong>Instructions :</strong> 
+          <span className="ml-1">Glissez-déposez les étapes entre les colonnes pour changer leur statut. Les modifications sont sauvegardées automatiquement.</span>
         </p>
       </div>
     </div>

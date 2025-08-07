@@ -77,6 +77,9 @@ export default function Connexion() {
             case 'prestataire':
               navigate('/dashboard-prestataire');
               break;
+            case 'fournisseur':
+              navigate('/dashboard-fournisseur');
+              break;
             default:
               navigate('/dashboard');
               break;

@@ -3,182 +3,195 @@ import React from 'react';
 const Fonctionnalites = () => {
   const features = [
     {
-      id: 'suivi-temps-reel',
-      title: 'Suivi en temps réel',
-      description: 'Surveillez l\'avancement de vos projets en temps réel avec des mises à jour instantanées.',
-      icon: 'fas fa-clock'
+      id: 'gestion-projets',
+      title: 'Gestion de Projets Complète',
+      description: 'Créez, organisez et suivez tous vos projets de construction depuis une interface unique et intuitive.',
+      icon: 'fas fa-project-diagram',
+      details: ['Création de projets illimitée', 'Suivi d\'avancement en temps réel', 'Gestion des budgets', 'Planification des délais']
+    },
+    {
+      id: 'kanban-etapes',
+      title: 'Kanban des Étapes',
+      description: 'Visualisez et gérez l\'avancement de vos projets avec un système Kanban intuitif.',
+      icon: 'fas fa-tasks',
+      details: ['Glisser-déposer des étapes', 'Statuts personnalisables', 'Notifications automatiques', 'Historique des modifications']
+    },
+    {
+      id: 'gestion-devis',
+      title: 'Système de Devis Avancé',
+      description: 'Créez, envoyez et suivez vos devis avec un système de gestion complet.',
+      icon: 'fas fa-file-invoice-dollar',
+      details: ['Modèles de devis', 'Calculs automatiques', 'Suivi des acceptations', 'Intégration facturation']
     },
     {
       id: 'messagerie-integree',
-      title: 'Messagerie intégrée',
+      title: 'Messagerie Intégrée',
       description: 'Communiquez efficacement avec votre équipe directement dans la plateforme.',
-      icon: 'fas fa-comments'
+      icon: 'fas fa-comments',
+      details: ['Chat en temps réel', 'Notifications push', 'Partage de fichiers', 'Historique des conversations']
     },
     {
-      id: 'gestion-documents',
-      title: 'Gestion documentaire',
-      description: 'Centralisez tous vos documents de projet dans un espace sécurisé et organisé.',
-      icon: 'fas fa-folder-open'
+      id: 'annuaire-prestataires',
+      title: 'Annuaire des Prestataires',
+      description: 'Trouvez et contactez facilement des prestataires qualifiés pour vos projets.',
+      icon: 'fas fa-users',
+      details: ['Base de données étendue', 'Filtres avancés', 'Évaluations et avis', 'Contact direct']
+    },
+    {
+      id: 'catalogue-fournisseurs',
+      title: 'Catalogue Fournisseurs',
+      description: 'Accédez à un vaste catalogue de matériaux et équipements de construction.',
+      icon: 'fas fa-warehouse',
+      details: ['Milliers de produits', 'Comparaison de prix', 'Commande en ligne', 'Livraison trackée']
+    },
+    {
+      id: 'gestion-paiements',
+      title: 'Gestion des Paiements',
+      description: 'Suivez vos factures, paiements et budget projet en temps réel.',
+      icon: 'fas fa-credit-card',
+      details: ['Facturation automatique', 'Suivi des paiements', 'Rapports financiers', 'Intégration bancaire']
     },
     {
       id: 'planning-intelligent',
-      title: 'Planning intelligent',
+      title: 'Planning Intelligent',
       description: 'Optimisez vos ressources avec un système de planification automatisé.',
-      icon: 'fas fa-calendar-alt'
+      icon: 'fas fa-calendar-alt',
+      details: ['Planification automatique', 'Gestion des ressources', 'Détection de conflits', 'Optimisation des délais']
     },
     {
       id: 'reporting-avance',
-      title: 'Reporting avancé',
-      description: 'Générez des rapports détaillés pour analyser les performances de vos projets.',
-      icon: 'fas fa-chart-bar'
-    },
-    {
-      id: 'mobile-first',
-      title: 'Mobile First',
-      description: 'Accédez à vos projets partout, à tout moment, depuis votre smartphone.',
-      icon: 'fas fa-mobile-alt'
+      title: 'Reporting Avancé',
+      description: 'Générez des rapports détaillés sur l\'avancement et la performance de vos projets.',
+      icon: 'fas fa-chart-line',
+      details: ['Tableaux de bord interactifs', 'Rapports personnalisables', 'Export PDF/Excel', 'Analyses prédictives']
     }
   ];
 
-  const processSteps = [
+  const roles = [
     {
-      id: 'creation',
-      title: 'Créer votre projet',
-      description: 'Définissez les paramètres, équipes et objectifs de votre projet de construction.',
-      icon: 'fas fa-plus-circle',
-      step: '01'
+      name: 'Clients',
+      icon: 'fas fa-home',
+      color: 'blue',
+      features: ['Suivi de projets', 'Communication équipe', 'Validation devis', 'Gestion paiements']
     },
     {
-      id: 'collaboration',
-      title: 'Collaborer efficacement',
-      description: 'Invitez votre équipe, partagez les documents et communiquez en temps réel.',
-      icon: 'fas fa-users-cog',
-      step: '02'
+      id: 'architectes',
+      title: 'Architectes',
+      icon: 'fas fa-drafting-compass',
+      color: 'emerald',
+      features: ['Conception projets', 'Validation technique', 'Gestion étapes', 'Coordination équipes']
     },
     {
-      id: 'livraison',
-      title: 'Livrer avec succès',
-      description: 'Suivez les progrès, respectez les délais et livrez des projets de qualité.',
-      icon: 'fas fa-trophy',
-      step: '03'
+      id: 'prestataires',
+      title: 'Prestataires',
+      icon: 'fas fa-hard-hat',
+      color: 'orange',
+      features: ['Recherche projets', 'Soumission devis', 'Gestion chantiers', 'Facturation']
+    },
+    {
+      id: 'fournisseurs',
+      title: 'Fournisseurs',
+      icon: 'fas fa-truck',
+      color: 'purple',
+      features: ['Catalogue produits', 'Gestion commandes', 'Publicités ciblées', 'Suivi livraisons']
     }
   ];
 
   return (
-    <>
-      {/* Section Fonctionnalités */}
-      <section className="section-gray">
-        <div className="container">
-          <div className="text-center mb-12">
-            <div className="feature-icon mx-auto">
-              <i className="fas fa-cogs"></i>
-            </div>
-            <h2 className="heading-2">Fonctionnalités puissantes</h2>
-            <p className="text-xl text-gray max-w-2xl mx-auto">
-              Découvrez tous les outils dont vous avez besoin pour gérer vos projets de construction avec excellence.
-            </p>
-          </div>
-
-          <div className="grid-3">
-            {features.map((feature) => (
-              <div key={feature.id} className="card animate-fade-in">
-                <div className="feature-icon">
-                  <i className={feature.icon}></i>
-                </div>
-                <h3 className="heading-3">{feature.title}</h3>
-                <p className="text-gray">{feature.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Section Processus */}
-      <section className="section-white">
-        <div className="container">
-          <div className="text-center mb-12">
-            <div className="feature-icon mx-auto" style={{backgroundColor: 'var(--dark-gray)'}}>
-              <i className="fas fa-route"></i>
-            </div>
-            <h2 className="heading-2" style={{color: 'var(--dark-gray)'}}>Comment ça marche</h2>
-            <p className="text-xl max-w-2xl mx-auto" style={{color: 'var(--light-gray)'}}>
-              Un processus simple en 3 étapes pour transformer vos projets de construction.
-            </p>
-          </div>
-
-          <div className="grid-3">
-            {processSteps.map((step, index) => (
-              <div key={step.id} className="card-white text-center">
-                <div className="relative mb-6">
-                  <div className="feature-icon mx-auto" style={{backgroundColor: 'var(--dark-gray)'}}>
-                    <i className={step.icon}></i>
-                  </div>
-                  <div 
-                    className="absolute -top-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
-                    style={{backgroundColor: 'var(--orange)', color: 'white'}}
-                  >
-                    {step.step}
-                  </div>
-                </div>
-                <h3 className="heading-3" style={{color: 'var(--dark-gray)'}}>{step.title}</h3>
-                <p style={{color: 'var(--light-gray)'}}>{step.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Section CTA finale */}
-      <section className="section-dark">
-        <div className="container text-center">
-          <div className="feature-icon mx-auto">
-            <i className="fas fa-rocket"></i>
-          </div>
-          <h2 className="heading-2">Prêt à transformer vos projets ?</h2>
-          <p className="text-xl text-gray mb-8 max-w-2xl mx-auto">
-            Rejoignez plus de 2500 professionnels qui font confiance à Finitio pour leurs projets de construction.
+    <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+      <div className="container mx-auto px-4">
+        {/* En-tête */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-gray-800 mb-6">
+            Fonctionnalités Complètes
+          </h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Découvrez toutes les fonctionnalités qui font de Finitio la plateforme de référence 
+            pour la gestion de projets de construction au Maroc.
           </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/inscription" className="btn btn-orange">
-              <i className="fas fa-user-plus icon"></i>
-              Créer mon compte gratuit
-            </a>
-            <a href="/contact" className="btn btn-outline">
-              <i className="fas fa-phone icon"></i>
-              Parler à un expert
-            </a>
-          </div>
+        </div>
 
-          {/* Statistiques finales */}
-          <div className="stats-container mt-12">
-            <div className="stat-item">
-              <div className="feature-icon mx-auto mb-2" style={{width: '3rem', height: '3rem', fontSize: '1rem'}}>
-                <i className="fas fa-shield-alt"></i>
+        {/* Fonctionnalités principales */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+          {features.map((feature) => (
+            <div 
+              key={feature.id}
+              className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+            >
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                  <i className={`${feature.icon} text-blue-600 text-xl`}></i>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-800">{feature.title}</h3>
               </div>
-              <div className="stat-number">100%</div>
-              <div className="stat-label">Sécurisé</div>
+              
+              <p className="text-gray-600 mb-4 leading-relaxed">
+                {feature.description}
+              </p>
+              
+              <ul className="space-y-2">
+                {feature.details.map((detail, index) => (
+                  <li key={index} className="flex items-center text-sm text-gray-700">
+                    <i className="fas fa-check text-green-500 mr-2"></i>
+                    {detail}
+                  </li>
+                ))}
+              </ul>
             </div>
-            
-            <div className="stat-item">
-              <div className="feature-icon mx-auto mb-2" style={{width: '3rem', height: '3rem', fontSize: '1rem'}}>
-                <i className="fas fa-headset"></i>
+          ))}
+        </div>
+
+        {/* Section rôles */}
+        <div className="bg-white rounded-2xl p-8 shadow-lg">
+          <h3 className="text-3xl font-bold text-center text-gray-800 mb-12">
+            Adapté à Tous les Acteurs du BTP
+          </h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {roles.map((role) => (
+              <div 
+                key={role.name}
+                className={`bg-${role.color}-50 border border-${role.color}-200 rounded-xl p-6 text-center hover:shadow-lg transition-all duration-300`}
+              >
+                <div className={`w-16 h-16 bg-${role.color}-100 rounded-full flex items-center justify-center mx-auto mb-4`}>
+                  <i className={`${role.icon} text-${role.color}-600 text-2xl`}></i>
+                </div>
+                
+                <h4 className={`text-xl font-semibold text-${role.color}-800 mb-4`}>
+                  {role.name}
+                </h4>
+                
+                <ul className="space-y-2">
+                  {role.features.map((feature, index) => (
+                    <li key={index} className={`text-sm text-${role.color}-700`}>
+                      • {feature}
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <div className="stat-number">24/7</div>
-              <div className="stat-label">Support</div>
-            </div>
-            
-            <div className="stat-item">
-              <div className="feature-icon mx-auto mb-2" style={{width: '3rem', height: '3rem', fontSize: '1rem'}}>
-                <i className="fas fa-money-bill-wave"></i>
-              </div>
-              <div className="stat-number">0€</div>
-              <div className="stat-label">Pour commencer</div>
-            </div>
+            ))}
           </div>
         </div>
-      </section>
-    </>
+
+        {/* Call to action */}
+        <div className="text-center mt-16">
+          <h3 className="text-2xl font-bold text-gray-800 mb-4">
+            Prêt à transformer votre façon de gérer vos projets ?
+          </h3>
+          <p className="text-gray-600 mb-8">
+            Rejoignez plus de 2500+ professionnels qui font confiance à Finitio
+          </p>
+          <div className="space-x-4">
+            <button className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+              Commencer gratuitement
+            </button>
+            <button className="border border-blue-600 text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors">
+              Voir la démo
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 
