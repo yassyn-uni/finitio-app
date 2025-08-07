@@ -65,10 +65,26 @@ export default function Connexion() {
         // Stocker le rôle pour affichage du bouton Dashboard approprié
         if (profile?.role) {
           localStorage.setItem('user_role', profile.role);
+          
+          // Redirection directe vers le dashboard spécifique selon le rôle
+          switch (profile.role.toLowerCase()) {
+            case 'client':
+              navigate('/dashboard-client');
+              break;
+            case 'architecte':
+              navigate('/dashboard-architecte');
+              break;
+            case 'prestataire':
+              navigate('/dashboard-prestataire');
+              break;
+            default:
+              navigate('/dashboard');
+              break;
+          }
+        } else {
+          // Si pas de rôle défini, rediriger vers le dashboard général
+          navigate('/dashboard');
         }
-        
-        // Redirection vers l'accueil avec accès au dashboard via le menu
-        navigate('/');
       }
     } catch (error) {
       ErrorHandler.log(error, 'Connexion');
