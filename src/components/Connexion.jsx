@@ -62,26 +62,13 @@ export default function Connexion() {
           .eq('id', data.user.id)
           .single();
 
-        // Redirection selon le rôle
-        let dashboardPath = '/dashboard'; // Fallback par défaut
-        
+        // Stocker le rôle pour affichage du bouton Dashboard approprié
         if (profile?.role) {
-          switch (profile.role.toLowerCase()) {
-            case 'client':
-              dashboardPath = '/dashboard-client';
-              break;
-            case 'architecte':
-              dashboardPath = '/dashboard-architecte';
-              break;
-            case 'prestataire':
-              dashboardPath = '/dashboard-prestataire';
-              break;
-            default:
-              dashboardPath = '/dashboard';
-          }
+          localStorage.setItem('user_role', profile.role);
         }
         
-        navigate(dashboardPath);
+        // Redirection vers l'accueil avec accès au dashboard via le menu
+        navigate('/');
       }
     } catch (error) {
       ErrorHandler.log(error, 'Connexion');

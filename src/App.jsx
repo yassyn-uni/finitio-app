@@ -51,80 +51,85 @@ function AppWithTracking() {
   // usePageTracking(OptimizedAnalytics);
 
   return (
-    <Routes>
-      {/* Page d’accueil */}
-      <Route
-        path="/"
-        element={
-          <>
-            <Navbar />
-            <Hero />
-            <Pourquoi />
-            <Fonctionnalites />
-          </>
-        }
-      />
+    <>
+      {/* 🧭 NAVBAR GLOBALE - PRÉSENTE SUR TOUTES LES PAGES */}
+      <Navbar />
+      
+      {/* 📄 CONTENU DES PAGES */}
+      <Routes>
+        {/* Page d'accueil */}
+        <Route
+          path="/"
+          element={
+            <>
+              <Hero />
+              <Pourquoi />
+              <Fonctionnalites />
+            </>
+          }
+        />
 
-      {/* Auth */}
-      <Route path="/inscription" element={<Inscription />} />
-      <Route path="/connexion" element={<Connexion />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
+        {/* Auth */}
+        <Route path="/inscription" element={<Inscription />} />
+        <Route path="/connexion" element={<Connexion />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
-      {/* Dashboards */}
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/dashboard-client" element={<DashboardClient />} />
-      <Route path="/dashboard-prestataire" element={<DashboardPrestataire />} />
-      <Route path="/dashboard-architecte" element={<DashboardArchitecte />} />
-      <Route path="/analytics" element={<AnalyticsDashboard />} />
+        {/* Dashboards */}
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard-client" element={<DashboardClient />} />
+        <Route path="/dashboard-prestataire" element={<DashboardPrestataire />} />
+        <Route path="/dashboard-architecte" element={<DashboardArchitecte />} />
+        <Route path="/analytics" element={<AnalyticsDashboard />} />
 
-      {/* Messages */}
-      <Route path="/messages" element={<Messages />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/paiements" element={<Paiements />} />
-      <Route path="/devis" element={<Devis />} />
-      <Route path="/liste-achats" element={<ListeAchats />} />
-      <Route path="/validation-devis" element={<ValidationDevis />} />
-      <Route path="/gestion-etapes" element={<GestionEtapes />} />
-      <Route path="/projets-disponibles" element={<ProjetsDisponibles />} />
+        {/* Messages */}
+        <Route path="/messages" element={<Messages />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/paiements" element={<Paiements />} />
+        <Route path="/devis" element={<Devis />} />
+        <Route path="/liste-achats" element={<ListeAchats />} />
+        <Route path="/validation-devis" element={<ValidationDevis />} />
+        <Route path="/gestion-etapes" element={<GestionEtapes />} />
+        <Route path="/projets-disponibles" element={<ProjetsDisponibles />} />
 
-      {/* Projets */}
-      <Route path="/nouveau-projet" element={<NouveauProjet />} />
-      <Route path="/projets" element={<ListeProjets />} />
-      
-      {/* Routes spécifiques pour éviter les conflits */}
-      <Route path="/projets/disponibles" element={<ListeProjets />} />
-      <Route path="/projets/suivi" element={<ListeProjets />} />
-      <Route path="/projets/paiements" element={<ListeProjets />} />
-      <Route path="/projets/liste-achats" element={<ListeProjets />} />
-      <Route path="/projets/coordination" element={<ListeProjets />} />
-      <Route path="/projets/etapes" element={<ListeProjets />} />
-      
-      {/* Routes avec paramètres ID */}
-      <Route path="/projets/:id" element={<DetailProjet />} />
-      <Route path="/projets/:id/ajouter-etape" element={<AjouterEtape />} />
-      <Route path="/projets/:id/etapes" element={<EtapesProjet />} />
-      <Route path="/projets/:id/kanban" element={<EtapesKanban />} />
-      <Route path="/projets/:id/ajouter-devis" element={<AjouterDevis />} />
-      
-      {/* Redirection pour ancienne route /projet/ */}
-      <Route path="/projet/:id" element={<DetailProjet />} />
-      <Route path="/projet/:id/ajouter-etape" element={<AjouterEtape />} />
-      <Route path="/projet/:id/etapes" element={<EtapesProjet />} />
-      <Route path="/projet/:id/kanban" element={<EtapesKanban />} />
-      <Route path="/projet/:id/ajouter-devis" element={<AjouterDevis />} />
-      
-      {/* Routes devis */}
-      <Route path="/projets/:id/ajouter-devis" element={<AjouterDevis />} />
-      <Route path="/devis/nouveau" element={<AjouterDevis />} />
-      <Route path="/devis/:id" element={<AjouterDevis />} />
-      <Route path="/devis/mes" element={<ListeProjets />} />
-      <Route path="/devis/validation" element={<ListeProjets />} />
-      <Route path="/devis/suivi" element={<SuiviDevis />} />
-      
-      {/* Routes temporaires pour éviter les 404 */}
-      <Route path="/annuaire-prestataires" element={<AnnuairePrestataires />} />
-      <Route path="/onboarding-guide" element={<OnboardingGuide />} />
-    </Routes>
+        {/* Projets */}
+        <Route path="/nouveau-projet" element={<NouveauProjet />} />
+        <Route path="/projets" element={<ListeProjets />} />
+        
+        {/* Routes spécifiques pour éviter les conflits */}
+        <Route path="/projets/disponibles" element={<ListeProjets />} />
+        <Route path="/projets/suivi" element={<ListeProjets />} />
+        <Route path="/projets/paiements" element={<ListeProjets />} />
+        <Route path="/projets/liste-achats" element={<ListeProjets />} />
+        <Route path="/projets/coordination" element={<ListeProjets />} />
+        <Route path="/projets/etapes" element={<ListeProjets />} />
+        
+        {/* Routes avec paramètres ID */}
+        <Route path="/projets/:id" element={<DetailProjet />} />
+        <Route path="/projets/:id/ajouter-etape" element={<AjouterEtape />} />
+        <Route path="/projets/:id/etapes" element={<EtapesProjet />} />
+        <Route path="/projets/:id/kanban" element={<EtapesKanban />} />
+        <Route path="/projets/:id/ajouter-devis" element={<AjouterDevis />} />
+        
+        {/* Redirection pour ancienne route /projet/ */}
+        <Route path="/projet/:id" element={<DetailProjet />} />
+        <Route path="/projet/:id/ajouter-etape" element={<AjouterEtape />} />
+        <Route path="/projet/:id/etapes" element={<EtapesProjet />} />
+        <Route path="/projet/:id/kanban" element={<EtapesKanban />} />
+        <Route path="/projet/:id/ajouter-devis" element={<AjouterDevis />} />
+        
+        {/* Routes devis */}
+        <Route path="/projets/:id/ajouter-devis" element={<AjouterDevis />} />
+        <Route path="/devis/nouveau" element={<AjouterDevis />} />
+        <Route path="/devis/:id" element={<AjouterDevis />} />
+        <Route path="/devis/mes" element={<ListeProjets />} />
+        <Route path="/devis/validation" element={<ListeProjets />} />
+        <Route path="/devis/suivi" element={<SuiviDevis />} />
+        
+        {/* Routes temporaires pour éviter les 404 */}
+        <Route path="/annuaire-prestataires" element={<AnnuairePrestataires />} />
+        <Route path="/onboarding-guide" element={<OnboardingGuide />} />
+      </Routes>
+    </>
   );
 }
 
