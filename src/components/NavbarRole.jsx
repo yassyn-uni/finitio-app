@@ -18,73 +18,36 @@ export default function NavbarRole({ role, bgColor, textColor }) {
     fetchUser();
   }, []);
 
-  // FONCTION DE DÉCONNEXION ULTRA-ROBUSTE
+  // FONCTION DE DÉCONNEXION ULTRA-SIMPLIFIÉE
   const handleLogout = async (e) => {
-    // Empêcher la propagation et le comportement par défaut
+    // Empêcher la propagation
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
     
-    console.log('🚪 DÉCONNEXION FORCÉE INITIÉE...');
+    console.log('🚪 DÉCONNEXION SIMPLE INITIÉE...');
     
     // Éviter les clics multiples
-    if (isLoggingOut) {
-      console.log('⏳ Déconnexion déjà en cours...');
-      return;
-    }
-    
+    if (isLoggingOut) return;
     setIsLoggingOut(true);
     setMenuOpen(false);
     
     try {
-      console.log('🧹 Nettoyage complet du stockage...');
-      
-      // Nettoyage BRUTAL de tout le stockage
+      // Nettoyage simple
       localStorage.clear();
       sessionStorage.clear();
       
-      // Supprimer tous les cookies du domaine
-      document.cookie.split(";").forEach(function(c) { 
-        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
-      });
-      
-      console.log('🔐 Déconnexion Supabase avec timeout...');
-      
-      // Déconnexion Supabase avec timeout très court
-      const signOutPromise = supabase.auth.signOut();
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Timeout déconnexion')), 2000)
-      );
-      
-      try {
-        await Promise.race([signOutPromise, timeoutPromise]);
-        console.log('✅ Déconnexion Supabase réussie');
-      } catch (timeoutError) {
-        console.log('⚠️ Timeout Supabase, mais on continue...');
-      }
+      // Déconnexion Supabase simple
+      await supabase.auth.signOut();
+      console.log('✅ Déconnexion réussie');
       
     } catch (error) {
       console.error('❌ Erreur déconnexion:', error);
     }
     
-    // REDIRECTION FORCÉE IMMÉDIATE
-    console.log('🔄 REDIRECTION FORCÉE IMMÉDIATE');
-    
-    // Méthode 1: Redirection immédiate
+    // UNE SEULE REDIRECTION
     window.location.replace('/connexion');
-    
-    // Méthode 2: Fallback après 500ms
-    setTimeout(() => {
-      console.log('🔄 Fallback 1: window.location.href');
-      window.location.href = '/connexion';
-    }, 500);
-    
-    // Méthode 3: Fallback ultime après 1s
-    setTimeout(() => {
-      console.log('🔄 Fallback 2: Rechargement complet');
-      window.location.reload();
-    }, 1000);
   };
 
   // FONCTION DE DÉCONNEXION D'URGENCE (accessible globalement)

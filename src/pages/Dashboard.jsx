@@ -102,6 +102,10 @@ export default function Dashboard() {
             console.log('➡️ Redirection vers dashboard fournisseur');
             window.location.href = '/dashboard-fournisseur';
             return;
+          case 'admin':
+            console.log('➡️ Redirection vers dashboard admin');
+            window.location.href = '/dashboard';
+            return;
           default:
             console.log('❌ Rôle non reconnu:', role, '- affichage sélection');
             break;
