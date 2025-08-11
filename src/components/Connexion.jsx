@@ -56,37 +56,50 @@ export default function Connexion() {
         localStorage.setItem('session_start', Date.now().toString());
 
         // Récupérer le profil utilisateur pour déterminer le rôle
-        const { data: profile } = await supabase
+        const { data: profile, error: profileError } = await supabase
           .from('users')
           .select('role')
           .eq('id', data.user.id)
           .single();
 
+        console.log('Utilisateur connecté:', data.user.email);
+        console.log('Profil récupéré:', profile);
+        console.log('Erreur profil:', profileError);
+
         // Stocker le rôle pour affichage du bouton Dashboard approprié
         if (profile?.role) {
-          localStorage.setItem('user_role', profile.role);
+          const role = profile.role.toLowerCase();
+          localStorage.setItem('user_role', role);
           
-          // Redirection directe vers le dashboard spécifique selon le rôle
-          switch (profile.role.toLowerCase()) {
+          console.log('Rôle détecté:', role, 'pour utilisateur:', data.user.email);
+          
+          // Redirection directe vers le dashboard spécifique selon le rôle avec window.location.href
+          switch (role) {
             case 'client':
-              navigate('/dashboard-client');
-              break;
+              console.log('Redirection vers dashboard client');
+              window.location.href = '/dashboard-client';
+              return;
             case 'architecte':
-              navigate('/dashboard-architecte');
-              break;
+              console.log('Redirection vers dashboard architecte');
+              window.location.href = '/dashboard-architecte';
+              return;
             case 'prestataire':
-              navigate('/dashboard-prestataire');
-              break;
+              console.log('Redirection vers dashboard prestataire');
+              window.location.href = '/dashboard-prestataire';
+              return;
             case 'fournisseur':
-              navigate('/dashboard-fournisseur');
-              break;
+              console.log('Redirection vers dashboard fournisseur');
+              window.location.href = '/dashboard-fournisseur';
+              return;
             default:
-              navigate('/dashboard');
-              break;
+              console.log('Rôle non reconnu:', role, '- redirection vers dashboard général');
+              window.location.href = '/dashboard';
+              return;
           }
         } else {
+          console.log('Aucun rôle trouvé pour utilisateur:', data.user.email, '- redirection vers dashboard général');
           // Si pas de rôle défini, rediriger vers le dashboard général
-          navigate('/dashboard');
+          window.location.href = '/dashboard';
         }
       }
     } catch (error) {

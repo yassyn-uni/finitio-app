@@ -18,8 +18,22 @@ export default function NavbarRole({ role, bgColor, textColor }) {
   }, []);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate('/connexion');
+    try {
+      // Nettoyer le localStorage
+      localStorage.removeItem('user_role');
+      localStorage.removeItem('finitio_saved_email');
+      localStorage.removeItem('finitio_remember_me');
+      
+      // Déconnexion Supabase
+      await supabase.auth.signOut();
+      
+      // Forcer la redirection avec window.location pour éviter les problèmes de cache
+      window.location.href = '/connexion';
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion:', error);
+      // Forcer la redirection même en cas d'erreur
+      window.location.href = '/connexion';
+    }
   };
 
   return (

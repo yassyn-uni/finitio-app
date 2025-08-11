@@ -39,20 +39,32 @@ export default function Dashboard() {
 
         // Rediriger automatiquement vers le dashboard spécifique si un rôle est défini
         if (profile?.role) {
-          switch (profile.role.toLowerCase()) {
+          const role = profile.role.toLowerCase();
+          console.log('Rôle détecté:', role, 'pour utilisateur:', user.email);
+          
+          switch (role) {
             case 'client':
-              navigate('/dashboard-client');
+              console.log('Redirection vers dashboard client');
+              window.location.href = '/dashboard-client';
               return;
             case 'architecte':
-              navigate('/dashboard-architecte');
+              console.log('Redirection vers dashboard architecte');
+              window.location.href = '/dashboard-architecte';
               return;
             case 'prestataire':
-              navigate('/dashboard-prestataire');
+              console.log('Redirection vers dashboard prestataire');
+              window.location.href = '/dashboard-prestataire';
               return;
             case 'fournisseur':
-              navigate('/dashboard-fournisseur');
+              console.log('Redirection vers dashboard fournisseur');
+              window.location.href = '/dashboard-fournisseur';
               return;
+            default:
+              console.log('Rôle non reconnu:', role);
+              break;
           }
+        } else {
+          console.log('Aucun rôle trouvé pour utilisateur:', user.email);
         }
       } catch (error) {
         console.error('Erreur lors de la récupération du profil:', error);

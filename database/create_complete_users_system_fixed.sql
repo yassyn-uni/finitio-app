@@ -1,0 +1,237 @@
+-- 🏗️ SYSTÈME COMPLET UTILISATEURS + FOURNISSEURS POUR FINITIO - VERSION CORRIGÉE
+-- Ce script crée/complète la table users ET les tables fournisseurs
+-- ORDRE CORRIGÉ : Tables d'abord, politiques RLS ensuite
+
+-- ============================================================================
+-- 👤 ÉTAPE 1: COMPLÉTER LA TABLE USERS
+-- ============================================================================
+
+-- Ajouter les colonnes manquantes à la table users existante
+ALTER TABLE users 
+ADD COLUMN IF NOT EXISTS nom text,
+ADD COLUMN IF NOT EXISTS role text DEFAULT 'client',
+ADD COLUMN IF NOT EXISTS telephone text,
+ADD COLUMN IF NOT EXISTS ville text,
+ADD COLUMN IF NOT EXISTS updated_at timestamp DEFAULT now();
+
+-- Créer un index sur le rôle pour les performances
+CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
+
+-- ============================================================================
+-- 📦 ÉTAPE 2: TABLE FOURNISSEURS (Profils étendus)
+-- ============================================================================
+
+-- Table pour les informations étendues des fournisseurs
+CREATE TABLE IF NOT EXISTS fournisseurs (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references users(id) on delete cascade unique,
+  nom_entreprise text,
+  ICE numeric,
+  adresse text,
+  ville text,
+  code_postal text,
+  telephone text,
+  site_web text,
+  description text,
+  logo_url text,
+  statut text default 'actif', -- actif, suspendu, en_attente
+  note_moyenne numeric default 0,
+  nb_commandes integer default 0,
+  ca_total numeric default 0,
+  created_at timestamp default now(),
+  updated_at timestamp default now()
+);
+
+-- ============================================================================
+-- 📦 ÉTAPE 3: TABLE PRODUITS (Catalogue fournisseurs)
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS produits (
+  id uuid primary key default gen_random_uuid(),
+  fournisseur_id uuid references fournisseurs(id) on delete cascade,
+  nom text not null,
+  description text,
+  categorie text, -- Carrelage, Sanitaire, Aluminium, Verre, Revêtements
+  prix numeric not null,
+  unite text default 'unité', -- unité, m², m³, kg, etc.
+  stock integer default 0,
+  stock_min integer default 5,
+  image_url text,
+  statut text default 'actif', -- actif, rupture, discontinué
+  poids numeric,
+  dimensions text, -- "60x60x8cm"
+  marque text,
+  reference text,
+  delai_livraison integer default 7, -- jours
+  created_at timestamp default now(),
+  updated_at timestamp default now()
+);
+
+-- ============================================================================
+-- 📦 ÉTAPE 4: TABLE COMMANDES (Gestion des commandes)
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS commandes (
+  id uuid primary key default gen_random_uuid(),
+  fournisseur_id uuid references fournisseurs(id) on delete cascade,
+  client_id uuid references users(id) on delete cascade,
+  projet_id uuid, -- Référence optionnelle aux projets
+  numero_commande text unique not null,
+  statut text default 'en_attente', -- en_attente, confirmée, expédiée, livrée, annulée
+  total_ht numeric not null,
+  total_ttc numeric not null,
+  tva numeric default 20,
+  adresse_livraison text,
+  date_livraison_prevue date,
+  date_livraison_reelle date,
+  transporteur text,
+  numero_suivi text,
+  notes text,
+  created_at timestamp default now(),
+  updated_at timestamp default now()
+);
+
+-- ============================================================================
+-- 📦 ÉTAPE 5: TABLE LIGNES_COMMANDE (Détail des commandes)
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS lignes_commande (
+  id uuid primary key default gen_random_uuid(),
+  commande_id uuid references commandes(id) on delete cascade,
+  produit_id uuid references produits(id) on delete cascade,
+  quantite integer not null,
+  prix_unitaire numeric not null,
+  total_ligne numeric not null,
+  created_at timestamp default now()
+);
+
+-- ============================================================================
+-- 📦 ÉTAPE 6: TABLE PUBLICITES (Campagnes publicitaires)
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS publicites (
+  id uuid primary key default gen_random_uuid(),
+  fournisseur_id uuid references fournisseurs(id) on delete cascade,
+  titre text not null,
+  description text,
+  image_url text,
+  url_destination text,
+  type_campagne text default 'banniere', -- banniere, spotlight, premium
+  budget numeric not null,
+  budget_utilise numeric default 0,
+  cible_geographique text[], -- ['Casablanca', 'Rabat']
+  cible_roles text[], -- ['client', 'architecte', 'prestataire']
+  date_debut date not null,
+  date_fin date not null,
+  statut text default 'brouillon', -- brouillon, active, pausée, terminée
+  nb_impressions integer default 0,
+  nb_clics integer default 0,
+  created_at timestamp default now(),
+  updated_at timestamp default now()
+);
+
+-- ============================================================================
+-- 🔗 ÉTAPE 7: INDEX POUR PERFORMANCES (AVANT RLS)
+-- ============================================================================
+
+-- Index pour les recherches fréquentes
+CREATE INDEX IF NOT EXISTS idx_fournisseurs_user_id ON fournisseurs(user_id);
+CREATE INDEX IF NOT EXISTS idx_produits_fournisseur ON produits(fournisseur_id);
+CREATE INDEX IF NOT EXISTS idx_produits_categorie ON produits(categorie);
+CREATE INDEX IF NOT EXISTS idx_produits_statut ON produits(statut);
+CREATE INDEX IF NOT EXISTS idx_commandes_fournisseur ON commandes(fournisseur_id);
+CREATE INDEX IF NOT EXISTS idx_commandes_client ON commandes(client_id);
+CREATE INDEX IF NOT EXISTS idx_commandes_statut ON commandes(statut);
+CREATE INDEX IF NOT EXISTS idx_publicites_fournisseur ON publicites(fournisseur_id);
+CREATE INDEX IF NOT EXISTS idx_publicites_statut ON publicites(statut);
+
+-- ============================================================================
+-- 📊 ÉTAPE 8: POLITIQUES RLS (APRÈS CRÉATION DES TABLES)
+-- ============================================================================
+
+-- Activer RLS sur users si pas déjà fait
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+
+-- Activer RLS sur toutes les tables fournisseur
+ALTER TABLE fournisseurs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE produits ENABLE ROW LEVEL SECURITY;
+ALTER TABLE commandes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE lignes_commande ENABLE ROW LEVEL SECURITY;
+ALTER TABLE publicites ENABLE ROW LEVEL SECURITY;
+
+-- Politique RLS pour users : chaque utilisateur voit son profil
+DROP POLICY IF EXISTS "Users peuvent voir leur profil" ON users;
+CREATE POLICY "Users peuvent voir leur profil" ON users
+  FOR ALL USING (auth.uid() = id);
+
+-- Politique fournisseurs : accès à son propre profil
+DROP POLICY IF EXISTS "Fournisseurs peuvent voir leur profil" ON fournisseurs;
+CREATE POLICY "Fournisseurs peuvent voir leur profil" ON fournisseurs
+  FOR ALL USING (auth.uid() = user_id);
+
+-- Politique produits : fournisseur gère ses produits, autres peuvent voir
+DROP POLICY IF EXISTS "Fournisseurs gèrent leurs produits" ON produits;
+CREATE POLICY "Fournisseurs gèrent leurs produits" ON produits
+  FOR ALL USING (
+    fournisseur_id IN (
+      SELECT id FROM fournisseurs WHERE user_id = auth.uid()
+    )
+  );
+
+DROP POLICY IF EXISTS "Tous peuvent voir les produits actifs" ON produits;
+CREATE POLICY "Tous peuvent voir les produits actifs" ON produits
+  FOR SELECT USING (statut = 'actif');
+
+-- Politique commandes : fournisseur et client voient leurs commandes
+DROP POLICY IF EXISTS "Accès aux commandes" ON commandes;
+CREATE POLICY "Accès aux commandes" ON commandes
+  FOR ALL USING (
+    fournisseur_id IN (
+      SELECT id FROM fournisseurs WHERE user_id = auth.uid()
+    ) OR client_id = auth.uid()
+  );
+
+-- Politique lignes_commande : via commandes
+DROP POLICY IF EXISTS "Accès aux lignes de commande" ON lignes_commande;
+CREATE POLICY "Accès aux lignes de commande" ON lignes_commande
+  FOR ALL USING (
+    commande_id IN (
+      SELECT id FROM commandes WHERE 
+        fournisseur_id IN (
+          SELECT id FROM fournisseurs WHERE user_id = auth.uid()
+        ) OR client_id = auth.uid()
+    )
+  );
+
+-- Politique publicités : fournisseur gère ses campagnes
+DROP POLICY IF EXISTS "Fournisseurs gèrent leurs publicités" ON publicites;
+CREATE POLICY "Fournisseurs gèrent leurs publicités" ON publicites
+  FOR ALL USING (
+    fournisseur_id IN (
+      SELECT id FROM fournisseurs WHERE user_id = auth.uid()
+    )
+  );
+
+-- ============================================================================
+-- ✅ SCRIPT TERMINÉ
+-- ============================================================================
+
+-- Vérifier les colonnes de la table users après modification
+SELECT 
+  'Table users mise à jour:' as info,
+  column_name,
+  data_type,
+  is_nullable,
+  column_default
+FROM information_schema.columns 
+WHERE table_schema = 'public' 
+  AND table_name = 'users'
+ORDER BY ordinal_position;
+
+-- Afficher un résumé des tables créées
+SELECT 
+  'Système complet créé avec succès!' as message,
+  COUNT(*) as nb_tables_fournisseur
+FROM information_schema.tables 
+WHERE table_name IN ('fournisseurs', 'produits', 'commandes', 'lignes_commande', 'publicites')
+  AND table_schema = 'public';
