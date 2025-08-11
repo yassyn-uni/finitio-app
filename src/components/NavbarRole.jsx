@@ -18,21 +18,47 @@ export default function NavbarRole({ role, bgColor, textColor }) {
   }, []);
 
   const handleLogout = async () => {
+    console.log('🚪 Début de la déconnexion...');
+    
     try {
-      // Nettoyer le localStorage
-      localStorage.removeItem('user_role');
-      localStorage.removeItem('finitio_saved_email');
-      localStorage.removeItem('finitio_remember_me');
+      // Fermer le menu déroulant immédiatement
+      setMenuOpen(false);
       
-      // Déconnexion Supabase
-      await supabase.auth.signOut();
+      // Nettoyer TOUT le localStorage
+      console.log('🧹 Nettoyage localStorage...');
+      localStorage.clear();
       
-      // Forcer la redirection avec window.location pour éviter les problèmes de cache
-      window.location.href = '/connexion';
+      // Nettoyer également sessionStorage
+      sessionStorage.clear();
+      
+      // Déconnexion Supabase avec timeout
+      console.log('🔐 Déconnexion Supabase...');
+      const signOutPromise = supabase.auth.signOut();
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Timeout')), 3000)
+      );
+      
+      await Promise.race([signOutPromise, timeoutPromise]);
+      console.log('✅ Déconnexion Supabase réussie');
+      
     } catch (error) {
-      console.error('Erreur lors de la déconnexion:', error);
-      // Forcer la redirection même en cas d'erreur
-      window.location.href = '/connexion';
+      console.error('❌ Erreur lors de la déconnexion:', error);
+    } finally {
+      // TOUJOURS rediriger, même en cas d'erreur
+      console.log('🔄 Redirection forcée vers /connexion');
+      
+      // Méthode 1: window.location.replace (ne garde pas l'historique)
+      window.location.replace('/connexion');
+      
+      // Méthode 2: Fallback après 1 seconde
+      setTimeout(() => {
+        window.location.href = '/connexion';
+      }, 1000);
+      
+      // Méthode 3: Fallback ultime après 2 secondes
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     }
   };
 
