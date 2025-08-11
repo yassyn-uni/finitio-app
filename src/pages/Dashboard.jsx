@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
+import ForceRoleRedirect from '../components/ForceRoleRedirect';
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -37,34 +38,11 @@ export default function Dashboard() {
 
         setUserProfile(profile);
 
-        // Rediriger automatiquement vers le dashboard spécifique si un rôle est défini
+        // Si un rôle est défini, utiliser ForceRoleRedirect
         if (profile?.role) {
-          const role = profile.role.toLowerCase();
-          console.log('Rôle détecté:', role, 'pour utilisateur:', user.email);
-          
-          switch (role) {
-            case 'client':
-              console.log('Redirection vers dashboard client');
-              window.location.href = '/dashboard-client';
-              return;
-            case 'architecte':
-              console.log('Redirection vers dashboard architecte');
-              window.location.href = '/dashboard-architecte';
-              return;
-            case 'prestataire':
-              console.log('Redirection vers dashboard prestataire');
-              window.location.href = '/dashboard-prestataire';
-              return;
-            case 'fournisseur':
-              console.log('Redirection vers dashboard fournisseur');
-              window.location.href = '/dashboard-fournisseur';
-              return;
-            default:
-              console.log('Rôle non reconnu:', role);
-              break;
-          }
-        } else {
-          console.log('Aucun rôle trouvé pour utilisateur:', user.email);
+          console.log('Rôle détecté, utilisation de ForceRoleRedirect');
+          setLoading(false);
+          return;
         }
       } catch (error) {
         console.error('Erreur lors de la récupération du profil:', error);
@@ -85,6 +63,12 @@ export default function Dashboard() {
     );
   }
 
+  // Si l'utilisateur a un rôle défini, utiliser la redirection forcée
+  if (userProfile?.role) {
+    return <ForceRoleRedirect />;
+  }
+
+  // Si pas de rôle défini, afficher la page de sélection
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 to-blue-700 text-white">
       <header className="p-6 shadow-md bg-indigo-950/90 backdrop-blur-md">
@@ -182,7 +166,7 @@ export default function Dashboard() {
         <div className="mt-12 text-center">
           <div className="bg-white/10 rounded-xl p-6 max-w-2xl mx-auto backdrop-blur-sm border border-white/20">
             <h3 className="text-lg font-semibold mb-3">💡 Besoin d'aide ?</h3>
-            <p className="text-white/80 text-sm mb-4">
+            <p className="text-white/80 mb-4">
               Si vous ne savez pas quel espace choisir, contactez notre support pour configurer votre profil.
             </p>
             <Link 
