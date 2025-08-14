@@ -32,8 +32,8 @@ INSERT INTO public.users (id, nom, email, role, telephone, ville, adresse) VALUE
 -- Clients
 ('8f5d1ae6-7f53-4361-a42a-7731f7f1bb54', 'Mohamed Client', 'm.client1@gmail.com', 'client', '0669012345', 'Casablanca', 'Maarif'),
 ('8b2b9e1b-9ff1-4a9a-b1aa-4c9ae5a7bb5b', 'Aicha Benali', 'a.benali@gmail.com', 'client', '0660123456', 'Rabat', 'Agdal'),
-('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'Omar Tazi', 'o.tazi@gmail.com', 'client', '0661234567', 'Marrakech', 'Hivernage'),
-('cccccccc-cccc-cccc-cccc-cccccccccccc', 'Khadija Fassi', 'k.fassi@gmail.com', 'client', '0662345678', 'Fès', 'Ville Nouvelle'),
+('c7949ec9-359a-40cd-bc5b-968cc16ba370', 'Omar Tazi', 'o.tazi@gmail.com', 'client', '0661234567', 'Marrakech', 'Hivernage'),
+('044ba282-3798-4fac-8e87-f1dcf3465775', 'Khadija Fassi', 'k.fassi@gmail.com', 'client', '0662345678', 'Fès', 'Ville Nouvelle'),
 ('e53374eb-86c9-4a5a-aa32-523c483609439', 'Rachid Amrani', 'r.amrani@gmail.com', 'client', '0663456789', 'Agadir', 'Secteur Touristique');
 
 -- ====================================
@@ -64,7 +64,7 @@ INSERT INTO public.fournisseurs (user_id, nom_entreprise, description, specialit
 INSERT INTO public.projets (client_id, architecte_id, nom_projet, description, ville_projet, budget_estime, statut) VALUES
 ('8f5d1ae6-7f53-4361-a42a-7731f7f1bb54', 'c2b891d1-13e1-4ce4-b66c-3db1d364df40', 'Villa Moderne Casablanca', 'Construction villa R+1 avec piscine', 'Casablanca', 2500000.00, 'en_cours'),
 ('8b2b9e1b-9ff1-4a9a-b1aa-4c9ae5a7bb5b', '1f1c8d40-90c9-4200-93ea-2c0d9f840fc3', 'Rénovation Riad Marrakech', 'Rénovation complète riad traditionnel', 'Marrakech', 800000.00, 'en_cours'),
-('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'c2b891d1-13e1-4ce4-b66c-3db1d364df40', 'Appartement Agdal', 'Aménagement appartement 120m2', 'Rabat', 350000.00, 'planification');
+('c7949ec9-359a-40cd-bc5b-968cc16ba370', 'c2b891d1-13e1-4ce4-b66c-3db1d364df40', 'Appartement Agdal', 'Aménagement appartement 120m2', 'Rabat', 350000.00, 'planification');
 
 -- ====================================
 -- 7. RECRÉER ÉTAPES PROJET
